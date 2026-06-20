@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+
+<title>✦ 邏輯塔羅 ✦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Serif TC',serif;background:linear-gradient(135deg,#0a0a1a,#1a0a2e 50%,#0d0d2b);color:#e8d5b7;min-height:100vh;overflow-x:hidden}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 40px,#fff,transparent),radial-gradient(1.5px 1.5px at 160px 120px,rgba(255,255,255,.6),transparent),radial-gradient(1.2px 1.2px at 10px 90px,rgba(212,175,55,.4),transparent);background-size:200px 200px;animation:tw 4s ease-in-out infinite alternate}
+@keyframes tw{0%{opacity:.4}100%{opacity:1}}
+
+.scr{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:20px;position:relative;z-index:1}
+.scr.active{display:flex}
+.back{position:absolute;top:15px;left:15px;background:none;border:1px solid rgba(212,175,55,.3);color:#9b89b6;padding:5px 14px;border-radius:20px;font-family:inherit;font-size:.8em;cursor:pointer;z-index:5}
+.back:hover{color:#d4af37;border-color:#d4af37}
+
+.gold-btn{background:linear-gradient(135deg,#d4af37,#b8942e);color:#1a0a2e;border:none;padding:15px 44px;font-size:1.1em;font-family:inherit;font-weight:700;border-radius:50px;cursor:pointer;transition:all .3s;letter-spacing:3px}
+.gold-btn:hover{transform:scale(1.05);box-shadow:0 0 25px rgba(212,175,55,.5)}
+.gold-btn:disabled{opacity:.5;cursor:default;transform:none}
+.ghost-btn{background:transparent;border:1.5px solid rgba(212,175,55,.35);color:#d4af37;padding:12px 36px;font-size:.95em;font-family:inherit;border-radius:50px;cursor:pointer;letter-spacing:3px;margin:20px 0 35px}
+.ghost-btn:hover{background:rgba(212,175,55,.1)}
+
+.sec-title{color:#d4af37;font-size:1.35em;margin-bottom:8px;letter-spacing:3px;text-align:center}
+.sec-sub{color:#9b89b6;font-size:.85em;margin-bottom:20px;text-align:center}
+
+.sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:420px;width:100%}
+.sel-btn{background:linear-gradient(135deg,rgba(26,10,62,.85),rgba(15,10,42,.9));border:1.5px solid rgba(155,89,182,.25);padding:16px 10px;font-family:inherit;font-size:.9em;border-radius:12px;cursor:pointer;transition:all .3s;text-align:center;color:#e8d5b7;line-height:1.5}
+.sel-btn:hover{border-color:#d4af37;box-shadow:0 0 18px rgba(212,175,55,.2);transform:translateY(-2px)}
+.sel-btn .si{font-size:1.4em;display:block;margin-bottom:4px}
+.sel-btn .sn{color:#d4af37;font-weight:700;display:block}
+.sel-btn .sd{font-size:.7em;color:#9b89b6;margin-top:3px;display:block}
+.sel-btn.wide{grid-column:1/3}
+
+.time-grid{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;max-width:400px}
+.time-btn{background:rgba(26,10,62,.7);border:1.5px solid rgba(155,89,182,.25);padding:14px 24px;font-family:inherit;font-size:.95em;border-radius:30px;cursor:pointer;color:#e8d5b7;transition:all .3s;letter-spacing:1px}
+.time-btn:hover{border-color:#d4af37;color:#d4af37;box-shadow:0 0 15px rgba(212,175,55,.15)}
+
+#portal{justify-content:center;text-align:center}
+.p-title{font-size:2.4em;font-weight:700;color:#d4af37;text-shadow:0 0 25px rgba(212,175,55,.5);letter-spacing:6px;margin-bottom:8px}
+.p-sub{color:#9b89b6;font-size:1em;margin-bottom:8px;letter-spacing:3px}
+.p-desc{color:#7a6b8a;font-size:.85em;max-width:300px;line-height:1.8;margin:0 auto 35px}
+
+.path-display{color:#9b89b6;font-size:.82em;margin-bottom:14px;letter-spacing:1px;text-align:center}
+
+.detect-box{background:linear-gradient(135deg,rgba(30,15,55,.92),rgba(20,12,40,.95));border:1px solid rgba(212,175,55,.4);border-left:4px solid #d4af37;border-radius:14px;padding:25px;max-width:420px;width:90%;animation:fadeUp .6s ease}
+.detect-icon{font-size:2em;margin-bottom:8px}
+.detect-spread{color:#d4af37;font-size:1.4em;font-weight:700;letter-spacing:3px;margin-bottom:10px}
+.detect-reason{color:#c9b8dc;line-height:1.8;font-size:.92em;margin:14px 0;padding:14px;background:rgba(212,175,55,.06);border-radius:8px}
+.detect-meta{color:#9b89b6;font-size:.8em;margin-top:8px}
+
+.cmp-area{display:none;margin-top:18px;text-align:left}
+.cmp-area.show{display:block}
+.cmp-area label{display:block;color:#d4af37;font-size:.85em;margin:8px 0 4px}
+.cmp-area input{width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(212,175,55,.3);color:#e8d5b7;font-family:inherit;font-size:.95em;padding:8px 4px;outline:none;text-align:center}
+.cmp-area input:focus{border-color:#d4af37}
+
+#shuffle-screen{justify-content:center;text-align:center}
+.shuf-vis{display:flex;justify-content:center;gap:5px;margin:25px auto;flex-wrap:wrap;max-width:320px}
+.mc{width:36px;height:56px;background:linear-gradient(135deg,#2a1a4e,#1a0a3e);border:1px solid rgba(212,175,55,.3);border-radius:4px;transition:all .5s}
+.shuffling .mc{animation:shf .5s ease-in-out infinite alternate}
+@keyframes shf{0%{transform:translate(0,0) rotate(0);opacity:.6}100%{transform:translate(calc((var(--r)-.5)*70px),calc((var(--r2)-.5)*50px)) rotate(calc((var(--r)-.5)*25deg));opacity:1}}
+.shuf-hint{color:#9b89b6;margin-top:16px;font-size:.85em}
+.shuf-info{color:#9b89b6;font-size:.9em;margin-bottom:8px;letter-spacing:2px}
+
+#card-draw{padding-top:50px}
+.draw-hint{color:#d4af37;font-size:1em;margin-bottom:14px;text-align:center;min-height:1.5em}
+.phase-label{color:#d4af37;font-size:1.1em;font-weight:700;margin-bottom:10px;letter-spacing:2px;display:block}
+.card-row-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:14px 0;scrollbar-width:none}
+.card-row-wrap::-webkit-scrollbar{display:none}
+.card-row{display:flex;gap:12px;padding:8px 24px;width:max-content}
+
+/* === Card 3D Flip === */
+.cc{perspective:1000px;cursor:pointer;flex-shrink:0}
+.cd{width:115px;height:197px;position:relative;transform-style:preserve-3d;transition:transform .8s,box-shadow .3s;border-radius:8px}
+.cd.flipped{transform:rotateY(180deg)}
+.cd.flipped.reversed{transform:rotateY(180deg) rotate(180deg)}
+.cf{position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;overflow:hidden}
+
+/* Card Back */
+.cbk{background:linear-gradient(135deg,#2a1a5e,#1a0a3e 40%,#2a1a5e);border:2px solid rgba(212,175,55,.4);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cbk::before{content:'';position:absolute;inset:6px;border:1px solid rgba(212,175,55,.2);border-radius:6px}
+.cbs{font-size:2.5em;color:#d4af37;text-shadow:0 0 15px rgba(212,175,55,.5)}
+.cbt{font-size:.55em;color:rgba(212,175,55,.35);letter-spacing:4px;margin-top:4px}
+
+/* Card Front - NEW: image fills the card */
+.cft{background:#1c1233;border:2px solid #d4af37;transform:rotateY(180deg);display:flex;flex-direction:column;align-items:stretch}
+.cft-img-wrap{flex:1;position:relative;background:#0f0a20;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cft-img{width:100%;height:100%;object-fit:cover;display:block}
+.cft-emoji-fallback{display:none;font-size:3em;color:#d4af37;text-shadow:0 0 15px rgba(212,175,55,.4)}
+.cft-img-wrap.no-img .cft-img{display:none}
+.cft-img-wrap.no-img .cft-emoji-fallback{display:block}
+.cft-label{background:linear-gradient(180deg,rgba(15,10,32,.9),#0f0a20);border-top:1px solid rgba(212,175,55,.4);padding:5px 6px;text-align:center}
+.cft-label .cn{font-size:.78em;color:#e8d5b7;font-weight:700;letter-spacing:1px;line-height:1.2}
+.cft-label .nu{font-size:.6em;color:#d4af37;font-weight:700;margin-right:4px}
+
+.cc:hover .cd:not(.flipped){transform:translateY(-10px);box-shadow:0 8px 25px rgba(212,175,55,.2)}
+.cc.selected .cd{transform:translateY(-18px);box-shadow:0 12px 35px rgba(212,175,55,.4)}
+.cc.selected .cbk{border-color:#d4af37}
+
+.confirm-wrap{margin-top:15px;min-height:50px;display:flex;align-items:center}
+.draw-one-btn{background:rgba(212,175,55,.15);border:2px solid rgba(212,175,55,.5);color:#d4af37;padding:14px 35px;font-family:inherit;font-size:1em;font-weight:700;border-radius:12px;cursor:pointer;letter-spacing:2px;margin:10px 0}
+.draw-one-btn:hover{background:rgba(212,175,55,.25);box-shadow:0 0 20px rgba(212,175,55,.3)}
+.draw-one-btn:disabled{opacity:.4;cursor:default}
+.drawn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:15px 0}
+
+#reading{padding-top:35px}
+.rd-title{color:#d4af37;font-size:1.3em;margin-bottom:18px;letter-spacing:3px;text-align:center}
+.rd-cards{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.rd-slot{display:flex;flex-direction:column;align-items:center;gap:5px}
+.rd-slot .sl{color:#9b89b6;font-size:.78em;letter-spacing:1px}
+
+.panels{display:flex;flex-direction:column;gap:14px;width:100%;max-width:640px;margin:10px auto 0}
+.mp{background:linear-gradient(135deg,rgba(26,10,46,.85),rgba(15,10,32,.9));border:1px solid rgba(212,175,55,.25);border-radius:12px;overflow:hidden;opacity:0;transform:translateY(18px);transition:all .6s}
+.mp.show{opacity:1;transform:translateY(0)}
+.ep-head{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.ep-head .mpn{font-size:1.05em;font-weight:700;color:#d4af37}
+.ep-head .mpo{font-size:.78em;padding:2px 9px;border-radius:20px;font-weight:700}
+.mpo.up{background:rgba(76,175,80,.18);color:#81c784;border:1px solid rgba(76,175,80,.3)}
+.mpo.rv{background:rgba(244,67,54,.18);color:#e57373;border:1px solid rgba(244,67,54,.3)}
+.ep-head .mpe{font-size:.72em;color:#9b89b6}
+.ep-arrow{color:#d4af37;font-size:.8em;transition:transform .3s;margin-left:auto}
+.ep-arrow.open{transform:rotate(180deg)}
+.ep-body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 16px}
+.ep-body.open{max-height:1200px;padding:0 16px 16px}
+.ep-body .mpm{font-size:.92em;line-height:1.85;padding-top:8px;border-top:1px solid rgba(212,175,55,.1)}
+
+.synth{background:linear-gradient(135deg,rgba(30,15,55,.95),rgba(20,12,40,.98));border:1px solid rgba(212,175,55,.5);border-left:4px solid #d4af37;border-radius:12px;padding:20px;opacity:0;transform:translateY(20px);transition:all .8s}
+.synth.show{opacity:1;transform:translateY(0)}
+.synth-title{font-size:1.1em;color:#d4af37;font-weight:700;margin-bottom:12px;letter-spacing:2px;text-align:center}
+
+.synth-body{line-height:2;font-size:.92em}
+.synth-body .ss{margin-bottom:12px}
+.synth-body .slab{color:#d4af37;font-weight:700}
+.synth-body .sa{margin-top:12px;padding-top:12px;border-top:1px dashed rgba(212,175,55,.25);color:#c9b896}
+.synth-body .fable{background:rgba(212,175,55,.05);border-radius:8px;padding:14px;margin-top:14px;line-height:1.9;font-style:italic;color:#c9b8dc}
+.synth-body .fable-bridge{margin:10px 0;padding:10px 12px;background:rgba(212,175,55,.08);border-left:2px solid rgba(212,175,55,.5);border-radius:4px;color:#e8d5b7;font-style:normal;font-size:.92em;line-height:1.7}
+.synth-body .fable-action{font-style:normal;font-weight:700;color:#d4af37;margin-top:10px;display:block}
+
+
+.fail-msg{color:#e57373;text-align:center;padding:25px;line-height:2;font-size:1em}
+.sparkle{position:fixed;width:5px;height:5px;border-radius:50%;pointer-events:none;animation:spk .8s ease forwards;z-index:99}
+@keyframes spk{0%{opacity:1;transform:scale(1) translate(0,0)}100%{opacity:0;transform:scale(0) translate(var(--tx),var(--ty))}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(15px)}100%{opacity:1;transform:translateY(0)}}
+
+@media(min-width:768px){
+.cd{width:135px;height:232px}
+.cbs{font-size:3em}
+.cft-label .cn{font-size:.88em}
+}
+@media(max-width:380px){
+.cd{width:100px;height:172px}
+.cft-label .cn{font-size:.7em}
+.p-title{font-size:1.8em}
+}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+
+<!-- 1. Portal -->
+<div id="portal" class="scr active">
+<div class="p-title">✦ 邏輯塔羅 ✦</div>
+<div class="p-sub">靈魂演化的指引</div>
+<div class="p-desc">以邏輯為骨、直覺為翼<br>每一張牌都是生命的參數<br>每一個牌陣都是靈魂的說明書</div>
+<button class="gold-btn" onclick="goTo('theme-select')">開始占卜</button>
+</div>
+
+<!-- 2. Theme Select -->
+<div id="theme-select" class="scr">
+<button class="back" onclick="goTo('portal')">← 返回</button>
+<div class="sec-title">你想問什麼？</div>
+<div class="sec-sub">選擇一個主題方向</div>
+<div class="sel-grid" id="theme-grid"></div>
+</div>
+
+<!-- 3. Subtopic Select -->
+<div id="subtopic-select" class="scr">
+<button class="back" onclick="goTo('theme-select')">← 返回</button>
+<div class="sec-title" id="sub-title"></div>
+<div class="sec-sub">更精確地描述你的問題</div>
+<div class="sel-grid" id="sub-grid"></div>
+</div>
+
+<!-- 4. Time Select -->
+<div id="time-select" class="scr">
+<button class="back" onclick="goTo('subtopic-select')">← 返回</button>
+<div class="sec-title">想看多遠的未來？</div>
+<div class="sec-sub">塔羅適合半年以內的指引</div>
+<div class="path-display" id="path-so-far"></div>
+<div class="time-grid" id="time-grid"></div>
+</div>
+
+<!-- 5. Detect Result -->
+<div id="detect-result" class="scr" style="justify-content:center;text-align:center">
+<button class="back" onclick="goTo('time-select')">← 返回</button>
+<div class="detect-box">
+<div class="detect-icon" id="d-icon"></div>
+<div class="detect-spread" id="d-spread"></div>
+<div class="path-display" id="d-path"></div>
+<div class="detect-reason" id="d-reason"></div>
+<div class="detect-meta" id="d-meta"></div>
+<div class="cmp-area" id="cmp-area">
+<label>選項 A</label><input id="cmp-a" placeholder="">
+<label>選項 B</label><input id="cmp-b" placeholder="">
+</div>
+<button class="gold-btn" onclick="goShuffle()" style="margin-top:20px">繼續</button>
+</div>
+</div>
+
+<!-- 6. Shuffle -->
+<div id="shuffle-screen" class="scr">
+<div style="text-align:center;margin:auto">
+<div class="shuf-info" id="shuf-info"></div>
+<div class="shuf-vis" id="shuf-vis"></div>
+<button class="gold-btn" id="shuf-btn" onclick="doShuffle()">洗 牌</button>
+<div class="shuf-hint">靜心默想，讓牌與你共振…</div>
+</div>
+</div>
+
+<!-- 7. Card Draw -->
+<div id="card-draw" class="scr">
+<div class="draw-hint" id="draw-hint"></div>
+<div id="draw-area"></div>
+<div class="confirm-wrap" id="confirm-wrap"></div>
+</div>
+
+<!-- 8. Reading -->
+<div id="reading" class="scr">
+<div class="rd-title" id="rd-title"></div>
+<div class="rd-cards" id="rd-cards"></div>
+<div class="panels" id="panels"></div>
+<button class="ghost-btn" onclick="resetAll()">✦ 重新占卜 ✦</button>
+</div>
+
+<script>
+// ============================================================
+// PART A: Config + Card Data + Flow Logic
+// ============================================================
+
+// ===== Themes & Subtopics =====
+const THEMES=[
+{key:"love",icon:"💕",name:"感情",subs:[
+{key:"single",icon:"🌸",name:"單身桃花",desc:"何時遇到對的人",spread:"future",reason:"你想了解桃花何時出現，使用未來之鏡預測近中遠期的感情走向。"},
+{key:"crush",icon:"💭",name:"曖昧發展",desc:"對方心意、該不該表白",spread:"situation",reason:"曖昧中充滿變數，使用情境牌陣完整呈現過去、現在、挑戰與未來。"},
+{key:"relationship",icon:"💑",name:"交往關係",desc:"感情穩定度、相處問題",spread:"situation",reason:"感情關係需要全面盤點，情境牌陣能揭示關係的過去脈絡到未來走向。"},
+{key:"ex",icon:"🔄",name:"復合機會",desc:"前任、要不要回頭",spread:"compare",reason:"復合與否是典型的二選一抉擇，比較牌陣最能釐清兩條路徑的能量。",cmpA:"回到他身邊",cmpB:"向前走"},
+{key:"marriage",icon:"💍",name:"婚姻家庭",desc:"結婚時機、婚後問題",spread:"situation",reason:"婚姻是人生大事，情境牌陣能完整呈現這段關係的全貌與走向。"}
+]},
+{key:"career",icon:"💼",name:"事業",subs:[
+{key:"promotion",icon:"📈",name:"升遷加薪",desc:"機會、時機、阻礙",spread:"future",reason:"升遷是時機問題，使用未來之鏡預測近中遠期的職涯發展。"},
+{key:"switch",icon:"🔀",name:"轉職跳槽",desc:"該不該換、新公司好不好",spread:"compare",reason:"轉職是留下與離開的抉擇，比較牌陣最適合分析兩條路。",cmpA:"留在現職",cmpB:"轉換跑道"},
+{key:"startup",icon:"🚀",name:"創業經營",desc:"可行性、方向、合夥",spread:"majors",reason:"創業是重大人生決定，使用主牌牌陣揭示靈魂此刻最需要面對的核心課題。"},
+{key:"interview",icon:"🎯",name:"面試求職",desc:"錄取機會、準備方向",spread:"future",reason:"求職結果是未來事件，使用未來之鏡預測近中遠期的發展走向。"},
+{key:"colleague",icon:"🤝",name:"職場關係",desc:"主管同事相處",spread:"cause",reason:"職場衝突通常有深層原因，原因牌陣將揭示起因→發展→結果的完整脈絡。"}
+]},
+{key:"money",icon:"💰",name:"財運",subs:[
+{key:"invest",icon:"📊",name:"投資理財",desc:"股票基金、進場時機",spread:"situation",reason:"投資需要分析當前局勢與挑戰，情境牌陣最適合全面盤點。"},
+{key:"income",icon:"💵",name:"正財收入",desc:"薪資、加薪、副業",spread:"future",reason:"收入是時間軸上的變化，使用未來之鏡預測近中遠期的財務趨勢。"},
+{key:"luck",icon:"🎲",name:"偏財運勢",desc:"意外之財、中獎運",spread:"future",reason:"偏財是運勢走向，使用未來之鏡觀察近中遠期的運勢波動。"},
+{key:"house",icon:"🏠",name:"購屋置產",desc:"買房時機、房產投資",spread:"compare",reason:"購屋是買與不買的抉擇，比較牌陣能清楚分析兩個方向。",cmpA:"現在出手",cmpB:"繼續觀望"},
+{key:"debt",icon:"💳",name:"債務財務",desc:"還債、資金周轉",spread:"cause",reason:"財務困境通常有根源，原因牌陣將追溯問題的因果鏈。"}
+]},
+{key:"social",icon:"👥",name:"人際",subs:[
+{key:"family",icon:"👨‍👩‍👧",name:"家人關係",desc:"親子、手足、長輩",spread:"core",reason:"家庭問題通常有深層根源，核心牌陣將追溯到關鍵年齡的源頭印記。"},
+{key:"friends",icon:"🧑‍🤝‍🧑",name:"朋友交際",desc:"友情、社交圈",spread:"situation",reason:"友誼需要全面了解現況，情境牌陣能呈現完整的關係動態。"},
+{key:"work",icon:"🏢",name:"職場同事",desc:"合作、衝突、信任",spread:"cause",reason:"同事間的摩擦通常有根源，原因牌陣揭示衝突的因果脈絡。"},
+{key:"someone",icon:"👤",name:"特定某人",desc:"某人的態度或意圖",spread:"situation",reason:"想了解與特定人的關係，情境牌陣能完整呈現過去到未來的全貌。"},
+{key:"community",icon:"🌐",name:"社群經營",desc:"網路社群、公眾形象",spread:"future",reason:"社群發展是未來趨勢，使用未來之鏡預測近中遠期的走向。"}
+]},
+{key:"general",icon:"🔮",name:"綜合",subs:[
+{key:"overall",icon:"☯️",name:"整體運勢",desc:"近期整體狀態",spread:"situation",reason:"整體運勢需要全面盤點，情境牌陣能呈現過去、現在、挑戰與未來。"},
+{key:"direction",icon:"🧭",name:"人生方向",desc:"迷茫、不知道要什麼",spread:"majors",reason:"人生方向是靈魂層級的大問題，使用主牌牌陣揭示此刻最核心的課題。"},
+{key:"growth",icon:"🌱",name:"心靈成長",desc:"內在課題、靈性提升",spread:"core",reason:"心靈成長往往與深層模式有關，核心牌陣將追溯到關鍵年齡的源頭。"},
+{key:"health",icon:"🏥",name:"身心健康",desc:"健康狀態、壓力調適",spread:"situation",reason:"身心狀態需要完整了解，情境牌陣能呈現現況、挑戰與未來走向。"},
+{key:"event",icon:"📌",name:"特定事件",desc:"某件具體的事",spread:"cause",reason:"想了解某件事的來龍去脈，原因牌陣將揭示完整的因果鏈。"}
+]}
+];
+
+const TIMES=[
+{key:"1m",icon:"⚡",name:"1 個月內"},
+{key:"3m",icon:"📅",name:"3 個月內"},
+{key:"6m",icon:"🗓️",name:"半年內"}
+];
+
+const SP={
+cause:{name:"原因牌陣",icon:"🔍",n:3,labels:["起因","發展","結果"]},
+future:{name:"未來之鏡",icon:"🔮",n:3,labels:["近期","中期","遠期"]},
+core:{name:"核心牌陣",icon:"🎯",n:3,labels:["事件起源","關鍵年齡","核心影響"]},
+situation:{name:"情境牌陣",icon:"🌊",n:4,labels:["過去","現在","挑戰","未來"]},
+compare:{name:"比較牌陣",icon:"⚖️",n:3,labels:["事件一","事件二","事件三"]},
+majors:{name:"主牌牌陣",icon:"👁️",n:0,labels:[]}
+};
+
+const CATNAME={love:"💕 感情",career:"💼 事業",money:"💰 財運",social:"👥 人際",general:"🔮 綜合"};
+const TIMECTX={"1m":{short:"這個月內",mid:"短期內",phrase:"在接下來的一個月裡"},"3m":{short:"三個月內",mid:"這一季",phrase:"在接下來的三個月裡"},"6m":{short:"半年內",mid:"中期來看",phrase:"在接下來的半年裡"}};
+
+// ===== 78 Cards (with image filenames matching cards/ folder) =====
+const D=[
+{id:0,n:"The Fool",c:"愚者",s:"major",u:"0",img:"m00",fb:"🌟",up:"無限可能，新旅程展開",rv:"魯莽行事，缺乏計畫"},
+{id:1,n:"The Magician",c:"魔術師",s:"major",u:"I",img:"m01",fb:"🔮",up:"才華施展，心想事成",rv:"欺騙操控，能力未發揮"},
+{id:2,n:"The High Priestess",c:"女祭司",s:"major",u:"II",img:"m02",fb:"🌙",up:"直覺敏銳，潛意識啟示",rv:"忽視內心，秘密隱藏"},
+{id:3,n:"The Empress",c:"皇后",s:"major",u:"III",img:"m03",fb:"🌿",up:"豐收富足，母性光輝",rv:"過度依賴，創造力受阻"},
+{id:4,n:"The Emperor",c:"皇帝",s:"major",u:"IV",img:"m04",fb:"👑",up:"權威穩固，理性領導",rv:"專制固執，控制過度"},
+{id:5,n:"The Hierophant",c:"教皇",s:"major",u:"V",img:"m05",fb:"🔑",up:"傳統智慧，精神指引",rv:"打破常規，教條僵化"},
+{id:6,n:"The Lovers",c:"戀人",s:"major",u:"VI",img:"m06",fb:"💕",up:"真愛降臨，重要抉擇",rv:"價值衝突，關係失衡"},
+{id:7,n:"The Chariot",c:"戰車",s:"major",u:"VII",img:"m07",fb:"⚡",up:"意志堅定，勝利前進",rv:"方向迷失，失去控制"},
+{id:8,n:"Strength",c:"力量",s:"major",u:"VIII",img:"m08",fb:"🦁",up:"內在勇氣，柔中帶剛",rv:"自我懷疑，內心軟弱"},
+{id:9,n:"The Hermit",c:"隱士",s:"major",u:"IX",img:"m09",fb:"🏮",up:"獨處沉思，尋找真理",rv:"過度孤立，拒絕指引"},
+{id:10,n:"Wheel of Fortune",c:"命運之輪",s:"major",u:"X",img:"m10",fb:"☸️",up:"命運轉折，好運來臨",rv:"厄運當頭，抗拒改變"},
+{id:11,n:"Justice",c:"正義",s:"major",u:"XI",img:"m11",fb:"⚖️",up:"公平公正，因果業報",rv:"不公偏頗，逃避責任"},
+{id:12,n:"The Hanged Man",c:"倒吊人",s:"major",u:"XII",img:"m12",fb:"🔄",up:"換位思考，甘願犧牲",rv:"無謂犧牲，拖延逃避"},
+{id:13,n:"Death",c:"死神",s:"major",u:"XIII",img:"m13",fb:"🦋",up:"結束重生，徹底轉變",rv:"抗拒結束，害怕改變"},
+{id:14,n:"Temperance",c:"節制",s:"major",u:"XIV",img:"m14",fb:"🏺",up:"平衡和諧，耐心調和",rv:"失去平衡，過度極端"},
+{id:15,n:"The Devil",c:"惡魔",s:"major",u:"XV",img:"m15",fb:"🔗",up:"慾望誘惑，物質束縛",rv:"掙脫枷鎖，重獲自由"},
+{id:16,n:"The Tower",c:"高塔",s:"major",u:"XVI",img:"m16",fb:"💥",up:"突變崩塌，破舊立新",rv:"害怕改變，逃避危機"},
+{id:17,n:"The Star",c:"星星",s:"major",u:"XVII",img:"m17",fb:"⭐",up:"希望信念，療癒重生",rv:"失去信心，夢想幻滅"},
+{id:18,n:"The Moon",c:"月亮",s:"major",u:"XVIII",img:"m18",fb:"🌕",up:"潛意識浮現，迷幻不安",rv:"走出迷霧，真相大白"},
+{id:19,n:"The Sun",c:"太陽",s:"major",u:"XIX",img:"m19",fb:"☀️",up:"光明喜悅，成功圓滿",rv:"短暫陰霾，樂觀受阻"},
+{id:20,n:"Judgement",c:"審判",s:"major",u:"XX",img:"m20",fb:"📯",up:"覺醒重生，重大決定",rv:"自我否定，拒絕反省"},
+{id:21,n:"The World",c:"世界",s:"major",u:"XXI",img:"m21",fb:"🌍",up:"功德圓滿，大功告成",rv:"尚未完成，缺少收尾"},
+{id:22,n:"Ace of Wands",c:"權杖王牌",s:"wands",u:"A",img:"w01",fb:"🔥",up:"靈感迸發，嶄新開始",rv:"缺乏動力，計畫延遲"},
+{id:23,n:"Two of Wands",c:"權杖二",s:"wands",u:"2",img:"w02",fb:"🔥",up:"規劃未來，掌握方向",rv:"猶豫不決，害怕未知"},
+{id:24,n:"Three of Wands",c:"權杖三",s:"wands",u:"3",img:"w03",fb:"🔥",up:"展望遠方，計畫推進",rv:"阻礙延遲，眼光狹隘"},
+{id:25,n:"Four of Wands",c:"權杖四",s:"wands",u:"4",img:"w04",fb:"🔥",up:"歡慶豐收，和諧穩固",rv:"缺乏歸屬，基礎不穩"},
+{id:26,n:"Five of Wands",c:"權杖五",s:"wands",u:"5",img:"w05",fb:"🔥",up:"競爭角力，意見衝突",rv:"避免衝突，內在掙扎"},
+{id:27,n:"Six of Wands",c:"權杖六",s:"wands",u:"6",img:"w06",fb:"🔥",up:"勝利凱旋，獲得肯定",rv:"驕傲自滿，名譽受損"},
+{id:28,n:"Seven of Wands",c:"權杖七",s:"wands",u:"7",img:"w07",fb:"🔥",up:"堅守立場，奮力抵抗",rv:"力不從心，退縮放棄"},
+{id:29,n:"Eight of Wands",c:"權杖八",s:"wands",u:"8",img:"w08",fb:"🔥",up:"快速推進，消息來臨",rv:"延遲受阻，方向混亂"},
+{id:30,n:"Nine of Wands",c:"權杖九",s:"wands",u:"9",img:"w09",fb:"🔥",up:"堅持到底，保持警覺",rv:"身心疲憊，防備過度"},
+{id:31,n:"Ten of Wands",c:"權杖十",s:"wands",u:"10",img:"w10",fb:"🔥",up:"責任沉重，堅忍負擔",rv:"學會放下，過度承擔"},
+{id:32,n:"Page of Wands",c:"權杖侍者",s:"wands",u:"Pg",img:"w11",fb:"🔥",up:"熱情探索，好消息傳來",rv:"衝動幼稚，缺乏方向"},
+{id:33,n:"Knight of Wands",c:"權杖騎士",s:"wands",u:"Kn",img:"w12",fb:"🔥",up:"勇往直前，冒險精神",rv:"急躁魯莽，有始無終"},
+{id:34,n:"Queen of Wands",c:"權杖皇后",s:"wands",u:"Q",img:"w13",fb:"🔥",up:"自信魅力，熱情開朗",rv:"嫉妒霸道，自我中心"},
+{id:35,n:"King of Wands",c:"權杖國王",s:"wands",u:"K",img:"w14",fb:"🔥",up:"領袖氣質，願景宏大",rv:"獨斷專行，脾氣暴躁"},
+{id:36,n:"Ace of Cups",c:"聖杯王牌",s:"cups",u:"A",img:"c01",fb:"🏆",up:"情感湧現，新戀情萌芽",rv:"情感封閉，愛意流失"},
+{id:37,n:"Two of Cups",c:"聖杯二",s:"cups",u:"2",img:"c02",fb:"🏆",up:"心心相印，夥伴合作",rv:"關係失衡，信任破裂"},
+{id:38,n:"Three of Cups",c:"聖杯三",s:"cups",u:"3",img:"c03",fb:"🏆",up:"歡聚慶祝，友情昇華",rv:"放縱過度，社交疲乏"},
+{id:39,n:"Four of Cups",c:"聖杯四",s:"cups",u:"4",img:"c04",fb:"🏆",up:"冷漠倦怠，沉思反省",rv:"重拾熱情，敞開心扉"},
+{id:40,n:"Five of Cups",c:"聖杯五",s:"cups",u:"5",img:"c05",fb:"🏆",up:"失落悲傷，專注遺憾",rv:"走出悲傷，接受釋然"},
+{id:41,n:"Six of Cups",c:"聖杯六",s:"cups",u:"6",img:"c06",fb:"🏆",up:"懷舊童年，純真回憶",rv:"沉溺過去，無法前行"},
+{id:42,n:"Seven of Cups",c:"聖杯七",s:"cups",u:"7",img:"c07",fb:"🏆",up:"幻想眾多，選擇困難",rv:"回歸現實，看清真相"},
+{id:43,n:"Eight of Cups",c:"聖杯八",s:"cups",u:"8",img:"c08",fb:"🏆",up:"毅然離去，追尋意義",rv:"害怕放棄，留戀不捨"},
+{id:44,n:"Nine of Cups",c:"聖杯九",s:"cups",u:"9",img:"c09",fb:"🏆",up:"心滿意足，願望成真",rv:"貪得無厭，內心空虛"},
+{id:45,n:"Ten of Cups",c:"聖杯十",s:"cups",u:"10",img:"c10",fb:"🏆",up:"家庭幸福，圓滿和樂",rv:"家庭失和，期望落空"},
+{id:46,n:"Page of Cups",c:"聖杯侍者",s:"cups",u:"Pg",img:"c11",fb:"🏆",up:"浪漫創意，情感萌芽",rv:"情緒不穩，不切實際"},
+{id:47,n:"Knight of Cups",c:"聖杯騎士",s:"cups",u:"Kn",img:"c12",fb:"🏆",up:"浪漫追求，隨心而動",rv:"不切實際，情緒騎牆"},
+{id:48,n:"Queen of Cups",c:"聖杯皇后",s:"cups",u:"Q",img:"c13",fb:"🏆",up:"溫柔體貼，直覺敏銳",rv:"情緒失控，過度敏感"},
+{id:49,n:"King of Cups",c:"聖杯國王",s:"cups",u:"K",img:"c14",fb:"🏆",up:"情感成熟，沉穩包容",rv:"情緒壓抑，冷漠疏離"},
+{id:50,n:"Ace of Swords",c:"寶劍王牌",s:"swords",u:"A",img:"s01",fb:"⚔️",up:"突破真相，思路清晰",rv:"思緒混亂，判斷失誤"},
+{id:51,n:"Two of Swords",c:"寶劍二",s:"swords",u:"2",img:"s02",fb:"⚔️",up:"抉擇兩難，暫時僵局",rv:"資訊浮現，打破僵局"},
+{id:52,n:"Three of Swords",c:"寶劍三",s:"swords",u:"3",img:"s03",fb:"⚔️",up:"心碎傷痛，痛苦領悟",rv:"傷痛癒合，逐漸釋懷"},
+{id:53,n:"Four of Swords",c:"寶劍四",s:"swords",u:"4",img:"s04",fb:"⚔️",up:"休息修復，養精蓄銳",rv:"焦躁不安，強迫休息"},
+{id:54,n:"Five of Swords",c:"寶劍五",s:"swords",u:"5",img:"s05",fb:"⚔️",up:"衝突失敗，贏了卻輸",rv:"放下爭執，和好修復"},
+{id:55,n:"Six of Swords",c:"寶劍六",s:"swords",u:"6",img:"s06",fb:"⚔️",up:"離開困境，過渡轉移",rv:"走不出去，反覆困頓"},
+{id:56,n:"Seven of Swords",c:"寶劍七",s:"swords",u:"7",img:"s07",fb:"⚔️",up:"策略行動，隱藏真意",rv:"真相揭露，良心不安"},
+{id:57,n:"Eight of Swords",c:"寶劍八",s:"swords",u:"8",img:"s08",fb:"⚔️",up:"自我設限，困在迷局",rv:"解放自我，重見光明"},
+{id:58,n:"Nine of Swords",c:"寶劍九",s:"swords",u:"9",img:"s09",fb:"⚔️",up:"焦慮失眠，過度憂慮",rv:"面對恐懼，最壞已過"},
+{id:59,n:"Ten of Swords",c:"寶劍十",s:"swords",u:"10",img:"s10",fb:"⚔️",up:"徹底結束，跌入谷底",rv:"否極泰來，最壞已過"},
+{id:60,n:"Page of Swords",c:"寶劍侍者",s:"swords",u:"Pg",img:"s11",fb:"⚔️",up:"求知若渴，機敏觀察",rv:"尖酸刻薄，散播謠言"},
+{id:61,n:"Knight of Swords",c:"寶劍騎士",s:"swords",u:"Kn",img:"s12",fb:"⚔️",up:"雷厲風行，直言不諱",rv:"衝動冒進，言語傷人"},
+{id:62,n:"Queen of Swords",c:"寶劍皇后",s:"swords",u:"Q",img:"s13",fb:"⚔️",up:"聰慧獨立，明辨是非",rv:"冷酷嚴苛，過度批判"},
+{id:63,n:"King of Swords",c:"寶劍國王",s:"swords",u:"K",img:"s14",fb:"⚔️",up:"理性權威，公正決策",rv:"獨裁冷酷，濫用權力"},
+{id:64,n:"Ace of Pentacles",c:"錢幣王牌",s:"pentacles",u:"A",img:"p01",fb:"🪙",up:"財富機運，豐盛開端",rv:"錯失良機，投資失利"},
+{id:65,n:"Two of Pentacles",c:"錢幣二",s:"pentacles",u:"2",img:"p02",fb:"🪙",up:"靈活應變，兼顧平衡",rv:"失去平衡，捉襟見肘"},
+{id:66,n:"Three of Pentacles",c:"錢幣三",s:"pentacles",u:"3",img:"p03",fb:"🪙",up:"團隊合作，技藝精進",rv:"合作不順，品質低落"},
+{id:67,n:"Four of Pentacles",c:"錢幣四",s:"pentacles",u:"4",img:"p04",fb:"🪙",up:"穩固守成，財務安全",rv:"過度吝嗇，害怕失去"},
+{id:68,n:"Five of Pentacles",c:"錢幣五",s:"pentacles",u:"5",img:"p05",fb:"🪙",up:"困頓匱乏，精神貧窮",rv:"度過難關，接受幫助"},
+{id:69,n:"Six of Pentacles",c:"錢幣六",s:"pentacles",u:"6",img:"p06",fb:"🪙",up:"慷慨分享，施與受平衡",rv:"施恩圖報，不公平交易"},
+{id:70,n:"Seven of Pentacles",c:"錢幣七",s:"pentacles",u:"7",img:"p07",fb:"🪙",up:"等待收穫，耐心評估",rv:"急於求成，努力白費"},
+{id:71,n:"Eight of Pentacles",c:"錢幣八",s:"pentacles",u:"8",img:"p08",fb:"🪙",up:"勤奮精進，專注修練",rv:"敷衍了事，缺乏熱忱"},
+{id:72,n:"Nine of Pentacles",c:"錢幣九",s:"pentacles",u:"9",img:"p09",fb:"🪙",up:"獨立富足，品味生活",rv:"過度揮霍，依賴他人"},
+{id:73,n:"Ten of Pentacles",c:"錢幣十",s:"pentacles",u:"10",img:"p10",fb:"🪙",up:"家業興旺，世代傳承",rv:"家族紛爭，財務危機"},
+{id:74,n:"Page of Pentacles",c:"錢幣侍者",s:"pentacles",u:"Pg",img:"p11",fb:"🪙",up:"勤學踏實，新的財路",rv:"好高騖遠，缺乏計畫"},
+{id:75,n:"Knight of Pentacles",c:"錢幣騎士",s:"pentacles",u:"Kn",img:"p12",fb:"🪙",up:"穩健踏實，值得信賴",rv:"固執怠惰，停滯不前"},
+{id:76,n:"Queen of Pentacles",c:"錢幣皇后",s:"pentacles",u:"Q",img:"p13",fb:"🪙",up:"務實溫暖，生活富裕",rv:"失去安全感，忽略自我"},
+{id:77,n:"King of Pentacles",c:"錢幣國王",s:"pentacles",u:"K",img:"p14",fb:"🪙",up:"財富成就，穩健經營",rv:"貪婪物質，守財固執"}
+];
+
+// ===== State =====
+let curTheme=null,curSub=null,curTime=null,spread="",cat="general";
+let deck=[],display=[],sel=[],maxSel=3;
+let cmpPhase=0,cmpA=[],cmpB=[];
+let mjDrawn=[],mjFound=false,mjSupport=0,mjDeckIdx=0;
+
+// ===== Utils =====
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function goTo(id){document.querySelectorAll(".scr").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");window.scrollTo(0,0)}
+function getAge(c){
+const rm={"0":0,"I":1,"II":2,"III":3,"IV":4,"V":5,"VI":6,"VII":7,"VIII":8,"IX":9,"X":10,"XI":11,"XII":12,"XIII":13,"XIV":14,"XV":15,"XVI":16,"XVII":17,"XVIII":18,"XIX":19,"XX":20,"XXI":21};
+const pm={"A":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"Pg":11,"Kn":12,"Q":13,"K":14};
+return rm[c.u]!==undefined?rm[c.u]:(pm[c.u]||0);
+}
+
+// === Card HTML Builder (image with emoji fallback) ===
+function cardFrontHTML(c){
+return '<div class="cft-img-wrap">'
++'<img class="cft-img" src="cards/'+c.img+'.jpg" alt="'+c.c+'" onerror="this.parentElement.classList.add(\'no-img\')">'
++'<div class="cft-emoji-fallback">'+c.fb+'</div>'
++'</div>'
++'<div class="cft-label"><span class="nu">'+c.u+'</span><span class="cn">'+c.c+'</span></div>';
+}
+
+function sparkle(el){
+const r=el.getBoundingClientRect();
+for(let i=0;i<8;i++){
+const s=document.createElement("div");s.className="sparkle";
+s.style.left=(r.left+r.width/2+Math.random()*60-30)+"px";
+s.style.top=(r.top+r.height/2+Math.random()*60-30)+"px";
+s.style.setProperty("--tx",(Math.random()*80-40)+"px");
+s.style.setProperty("--ty",(Math.random()*80-40)+"px");
+s.style.background=Math.random()>.5?"#d4af37":"#9b59b6";
+document.body.appendChild(s);setTimeout(()=>s.remove(),1000);
+}
+}
+
+// ===== Init Theme Grid =====
+(function(){
+const g=document.getElementById("theme-grid");
+THEMES.forEach(t=>{
+const b=document.createElement("button");b.className="sel-btn";
+b.innerHTML='<span class="si">'+t.icon+'</span><span class="sn">'+t.name+'</span>';
+b.onclick=()=>{curTheme=t;cat=t.key;showSubtopics()};
+g.appendChild(b);
+});
+})();
+
+function showSubtopics(){
+document.getElementById("sub-title").textContent=curTheme.icon+" "+curTheme.name;
+const g=document.getElementById("sub-grid");g.innerHTML="";
+curTheme.subs.forEach(s=>{
+const b=document.createElement("button");b.className="sel-btn";
+b.innerHTML='<span class="si">'+s.icon+'</span><span class="sn">'+s.name+'</span><span class="sd">'+s.desc+'</span>';
+b.onclick=()=>{curSub=s;showTimeSelect()};
+g.appendChild(b);
+});
+goTo("subtopic-select");
+}
+
+function showTimeSelect(){
+document.getElementById("path-so-far").textContent=curTheme.icon+" "+curTheme.name+" → "+curSub.icon+" "+curSub.name;
+const g=document.getElementById("time-grid");g.innerHTML="";
+TIMES.forEach(t=>{
+const b=document.createElement("button");b.className="time-btn";
+b.innerHTML=t.icon+" "+t.name;
+b.onclick=()=>{curTime=t;showDetectResult()};
+g.appendChild(b);
+});
+goTo("time-select");
+}
+
+function showDetectResult(){
+spread=curSub.spread;
+const sp=SP[spread];
+document.getElementById("d-icon").textContent=sp.icon;
+document.getElementById("d-spread").textContent=sp.name;
+document.getElementById("d-path").textContent=curTheme.icon+" "+curTheme.name+" → "+curSub.icon+" "+curSub.name+" → "+curTime.icon+" "+curTime.name;
+document.getElementById("d-reason").textContent=curSub.reason;
+document.getElementById("d-meta").textContent=spread==="majors"?"不定張數 ∙ 抽到大阿爾克納為止":sp.n+" 張牌";
+const cmpArea=document.getElementById("cmp-area");
+if(spread==="compare"){
+cmpArea.classList.add("show");
+document.getElementById("cmp-a").value=curSub.cmpA||"";
+document.getElementById("cmp-b").value=curSub.cmpB||"";
+document.getElementById("cmp-a").placeholder=curSub.cmpA||"選項 A";
+document.getElementById("cmp-b").placeholder=curSub.cmpB||"選項 B";
+}else{cmpArea.classList.remove("show")}
+goTo("detect-result");
+}
+
+// ===== Shuffle =====
+function goShuffle(){
+const sp=SP[spread];
+document.getElementById("shuf-info").textContent="✦ "+sp.name+" ∙ "+CATNAME[cat]+" ✦";
+const vis=document.getElementById("shuf-vis");vis.innerHTML="";
+for(let i=0;i<15;i++){const d=document.createElement("div");d.className="mc";d.style.setProperty("--r",Math.random());d.style.setProperty("--r2",Math.random());vis.appendChild(d)}
+document.getElementById("shuf-btn").disabled=false;
+goTo("shuffle-screen");
+}
+
+function doShuffle(){
+const btn=document.getElementById("shuf-btn");btn.disabled=true;
+const vis=document.getElementById("shuf-vis");vis.classList.add("shuffling");
+vis.querySelectorAll(".mc").forEach(c=>{c.style.setProperty("--r",Math.random());c.style.setProperty("--r2",Math.random())});
+deck=shuffle(D).map(c=>({...c,isReversed:Math.random()<0.5}));
+setTimeout(()=>{vis.classList.remove("shuffling");goTo("card-draw");initDraw()},1800);
+}
+
+// ===== Draw Logic =====
+function initDraw(){
+sel=[];cmpPhase=0;cmpA=[];cmpB=[];mjDrawn=[];mjFound=false;mjSupport=0;mjDeckIdx=0;
+document.getElementById("confirm-wrap").innerHTML="";
+document.getElementById("draw-area").innerHTML="";
+if(spread==="majors")buildMajors();
+else if(spread==="compare"){cmpPhase=1;buildCompare()}
+else buildStandard();
+}
+
+function buildStandard(){
+maxSel=SP[spread].n;sel=[];
+display=deck.slice(0,10);
+document.getElementById("draw-hint").textContent="請選擇 "+maxSel+" 張牌";
+const area=document.getElementById("draw-area");
+area.innerHTML='<div class="card-row-wrap"><div class="card-row" id="card-row"></div></div>';
+const row=document.getElementById("card-row");
+display.forEach((c,i)=>{
+const el=document.createElement("div");el.className="cc";el.dataset.idx=i;
+el.innerHTML='<div class="cd"><div class="cf cbk"><div class="cbs">✦</div><div class="cbt">TAROT</div></div><div class="cf cft">'+cardFrontHTML(c)+'</div></div>';
+el.onclick=()=>toggleSelect(i);
+row.appendChild(el);
+});
+}
+
+function buildCompare(){
+const labelA=document.getElementById("cmp-a").value||curSub.cmpA||"選項 A";
+const labelB=document.getElementById("cmp-b").value||curSub.cmpB||"選項 B";
+maxSel=3;sel=[];
+const offset=cmpPhase===1?0:10;
+display=deck.slice(offset,offset+10);
+const hint=document.getElementById("draw-hint");
+hint.innerHTML='<span class="phase-label">'+(cmpPhase===1?labelA:labelB)+'</span>請選擇 3 張牌';
+const area=document.getElementById("draw-area");
+area.innerHTML='<div class="card-row-wrap"><div class="card-row" id="card-row"></div></div>';
+const row=document.getElementById("card-row");
+display.forEach((c,i)=>{
+const el=document.createElement("div");el.className="cc";el.dataset.idx=i;
+el.innerHTML='<div class="cd"><div class="cf cbk"><div class="cbs">✦</div><div class="cbt">TAROT</div></div><div class="cf cft">'+cardFrontHTML(c)+'</div></div>';
+el.onclick=()=>toggleSelect(i);
+row.appendChild(el);
+});
+document.getElementById("confirm-wrap").innerHTML="";
+}
+
+function buildMajors(){
+document.getElementById("draw-hint").textContent="逐張抽牌，尋找大阿爾克納…";
+document.getElementById("draw-area").innerHTML='<div style="text-align:center"><button class="draw-one-btn" id="mj-btn" onclick="drawOneMajor()">🃏 抽一張牌</button><div class="drawn-row" id="mj-row"></div><div class="draw-hint" id="mj-msg"></div></div>';
+}
+
+function drawOneMajor(){
+if(mjDeckIdx>=deck.length)return;
+const c=deck[mjDeckIdx++];mjDrawn.push(c);
+const row=document.getElementById("mj-row");
+const idx=mjDrawn.length-1;
+const el=document.createElement("div");el.className="cc";
+el.innerHTML='<div class="cd" id="mjcd-'+idx+'"><div class="cf cbk"><div class="cbs">✦</div><div class="cbt">TAROT</div></div><div class="cf cft">'+cardFrontHTML(c)+'</div></div>';
+row.appendChild(el);
+setTimeout(()=>{const cd=document.getElementById("mjcd-"+idx);cd.classList.add("flipped");if(c.isReversed)cd.classList.add("reversed");sparkle(cd)},300);
+const msg=document.getElementById("mj-msg");
+const btn=document.getElementById("mj-btn");
+if(!mjFound&&c.s==="major"){
+mjFound=true;
+setTimeout(()=>{msg.innerHTML='<span style="color:#81c784;font-weight:700">✦ 找到主牌「'+c.c+'」！再抽 2 張輔佐牌 ✦</span>';btn.textContent="🃏 抽輔佐牌"},800);
+return;
+}
+if(mjFound){
+mjSupport++;
+if(mjSupport>=2){
+btn.disabled=true;
+setTimeout(()=>{msg.innerHTML='<span style="color:#d4af37">✦ 牌陣完成 ✦</span>';document.getElementById("confirm-wrap").innerHTML='<button class="gold-btn" onclick="showReading(mjDrawn)" style="animation:fadeUp .5s">✦ 查看解讀 ✦</button>'},800);
+}
+return;
+}
+const nonMajorCount=mjDrawn.filter(x=>x.s!=="major").length;
+if(nonMajorCount>=5&&!mjFound){
+btn.disabled=true;
+setTimeout(()=>{msg.innerHTML='<div class="fail-msg">連續抽了 5 張牌仍未出現大阿爾克納。<br>這表示目前的問題可能尚未觸及核心，<br>建議重新調整問題後再次占卜。</div>';document.getElementById("confirm-wrap").innerHTML='<button class="gold-btn" onclick="resetAll()">✦ 重新占卜 ✦</button>'},800);
+}else{msg.textContent="已抽 "+mjDrawn.length+" 張，尚未出現主牌…"}
+}
+
+function toggleSelect(idx){
+const p=sel.indexOf(idx);
+if(p>-1)sel.splice(p,1);else{if(sel.length>=maxSel)return;sel.push(idx)}
+document.querySelectorAll("#card-row .cc").forEach((el,j)=>{el.classList.toggle("selected",sel.includes(j))});
+const hint=document.getElementById("draw-hint");
+const r=maxSel-sel.length;
+if(spread==="compare"){
+const labelA=document.getElementById("cmp-a").value||curSub.cmpA||"選項 A";
+const labelB=document.getElementById("cmp-b").value||curSub.cmpB||"選項 B";
+const ph=cmpPhase===1?labelA:labelB;
+hint.innerHTML='<span class="phase-label">'+ph+'</span>'+(r>0?"請選擇 "+r+" 張牌":"已選好！");
+}else{hint.textContent=r>0?"請選擇 "+r+" 張牌":"已選好！準備翻牌"}
+document.getElementById("confirm-wrap").innerHTML=r===0?'<button class="gold-btn" onclick="confirmDraw()" style="animation:fadeUp .5s">✦ 翻 牌 ✦</button>':"";
+}
+
+function confirmDraw(){
+const chosen=sel.map(i=>display[i]);
+if(spread==="compare"&&cmpPhase===1){cmpA=chosen;cmpPhase=2;buildCompare();return}
+if(spread==="compare"&&cmpPhase===2){cmpB=chosen;showReading([...cmpA,...cmpB]);return}
+showReading(chosen);
+}
+
+function togglePanel(i){
+const b=document.getElementById("epb-"+i);
+const a=document.getElementById("arrow-"+i);
+b.classList.toggle("open");a.classList.toggle("open");
+}
+
+function resetAll(){
+curTheme=null;curSub=null;curTime=null;
+goTo("portal");
+}
+
+// === PART A END ===
+// === PART B: 90 Stories Database (next message) ===
+// === PART C: Interpretation Engine (next message) ===
+// ============================================================
+// PART B: 90 Stories Database (30 Archetypes × 3 Variants)
+// ============================================================
+// energy: "positive"(正位多) / "balanced"(正逆參半) / "shadow"(逆位多)
+// themes: ["love","career","money","social","general"] 可多選
+// action: 各子題的行動指引模板 ({time}/{cards}會被替換)
+
+const STORIES=[
+
+// ═══════════════════════════════════════════
+// 🌱 GROWTH & TRANSFORMATION (1-6)
+// ═══════════════════════════════════════════
+
+// === 原型 1：種子破土 ===
+{archetype:"seed",themes:["love","career","general"],energy:"positive",
+story:"有一顆種子，被埋在土裡很久了。它一直懷疑自己是不是還能發芽。直到某個雨季的清晨，它感覺到水滲進來——不是溫柔的潤濕，是用力的、推著它往上長的那種雨。它才發現，原來這些日子的等待不是停滯，是在累積破土的力氣。",
+actions:{
+crush:"你在這段曖昧裡累積的耐心不是白費的。{time}，當機會出現的時候，你會發現自己其實早就準備好了。",
+promotion:"別小看你這些日子的累積。{cards}的能量告訴你，{time}是你破土的時機。",
+single:"你以為自己還沒準備好，但{cards}說你已經是了。{time}，把自己放在會被看見的地方。",
+startup:"{time}，那顆種子要破土了。準備好你需要的養分，然後信任自己的時機。",
+direction:"你並沒有走丟，你只是在累積。{time}，那個方向會自己浮現。",
+default:"你累積的東西比你以為的多。{time}，這是它們發芽的時候。"
+}},
+
+{archetype:"seed",themes:["love","career","general"],energy:"balanced",
+story:"一顆種子問土壤：「我該什麼時候發芽？」土壤說：「太早，你會凍死；太晚，你會錯過春天。」種子說：「那我怎麼知道？」土壤說：「你不會用想的知道，你會用感覺的。」",
+actions:{
+crush:"{cards}提醒你不要急著定義這段關係。{time}，跟著感覺走——你的直覺比你的腦袋更知道時機。",
+switch:"別逼自己現在就決定。{time}，先讓答案自己浮現——你會感覺到的。",
+invest:"{cards}在說「再等等」。{time}，觀察就好，不要急著進場。",
+overall:"你正在一個過渡期。{time}，最好的策略是「不要過度行動」，讓事情自然發展。",
+growth:"成長有它自己的節奏。{time}，學著信任那個節奏，而不是逼它快一點。",
+default:"{time}，跟著你的直覺走，不用所有事情都想清楚。"
+}},
+
+{archetype:"seed",themes:["love","career","general"],energy:"shadow",
+story:"有人挖開一塊土，看見一顆種子。「為什麼還沒發芽？」他生氣地說，「我給了你水，給了你土，給了你光。」種子說：「你忘了給我時間。」",
+actions:{
+crush:"{cards}的訊息很明確——你已經做得夠多了。{time}，把那份焦急放下，給彼此一些呼吸的空間。",
+ex:"你不是失敗了，你只是還沒看到結果。{time}，重點不是逼出答案，是先停止挖那顆種子。",
+debt:"{cards}在說「現在不是收成的時候」。{time}，先停止焦慮地檢視，給自己一個喘息的節奏。",
+health:"你的身體不是不努力，它需要時間。{time}，停止用「為什麼還沒好」逼迫自己。",
+event:"事情沒有走偏，只是你太急著要結果。{time}，放手，它會在你不看的時候發生。",
+default:"{time}，給事情時間。你已經做得夠多了。"
+}},
+
+// === 原型 2：繭與蝴蝶 ===
+{archetype:"cocoon",themes:["general","love","career"],energy:"positive",
+story:"一隻毛蟲鑽進繭裡，外面的世界以為它消失了。其實它在裡面把自己拆解、重組、長出翅膀。等它破繭而出的時候，所有人都驚訝——這跟原來那隻完全不一樣了。但它自己知道，它一直都是這個樣子，只是之前還沒有翅膀。",
+actions:{
+relationship:"這段關係正在進入一個新的階段。{cards}說，{time}會有一次質變——你會發現你們都不是之前那個樣子了。",
+promotion:"你最近的低調不是退步，是內在重組。{time}，當機會出現時，你會以全新的姿態出現。",
+direction:"你不是迷失，你在脫胎換骨。{time}，那個全新的自己會浮現。",
+growth:"{cards}揭示了一段內在的轉化期。{time}，相信這個過程——繭裡的事，沒人能替你做。",
+startup:"創業前的這段沉潛是必要的。{time}，當你出來的時候，你帶的會是真正的能力。",
+default:"{time}，你正在成為一個新版本的自己。"
+}},
+
+{archetype:"cocoon",themes:["general","love","career"],energy:"balanced",
+story:"繭裡的毛蟲問：「我什麼時候可以出去？」回答它的是黑暗。它再問：「我會變成什麼？」黑暗還是不回答。後來它明白了——黑暗不是不知道，是它要自己找到答案。",
+actions:{
+relationship:"你想要對方給你保證，但{cards}說：這次的答案得自己找。{time}，把焦點放回自己身上。",
+direction:"沒有人能告訴你方向。{time}，這段內在的對話，你得自己完成。",
+overall:"{cards}指出你正在一個沒有外界答案的階段。{time}，靜下來，問自己。",
+growth:"你一直在尋找答案。但{time}，真正的問題是「你願不願意自己回答」。",
+direction:"迷茫是繭。{time}，別急著破繭——先弄清楚你要變成什麼。",
+default:"{time}，答案不在外面，在你自己裡面。"
+}},
+
+{archetype:"cocoon",themes:["general","love","career"],energy:"shadow",
+story:"一個人在繭裡待了很久，他覺得這裡很安全。外面的世界太亮、太吵、太可怕。他決定再也不出去了。後來他在繭裡乾掉了——不是因為繭不夠保護他，是因為繭從來就不是用來永遠住在裡面的。",
+actions:{
+ex:"{cards}揭示了一個你不想面對的真相——你一直待在「他」這個繭裡。{time}，是時候出來了，外面有更大的世界。",
+crush:"你一直待在「曖昧」這個安全區。{cards}說：{time}，要嘛走出去，要嘛失去這隻蝴蝶。",
+switch:"現職這個繭已經太緊了，但你還不想出來。{time}，這份猶豫本身就是答案。",
+health:"{cards}指出你用安全感困住了自己。{time}，繭破了不是危險，繭破不了才是。",
+growth:"你一直拒絕長大。{time}，繭裡的安全是假的——真正的安全是你的翅膀。",
+default:"{time}，那個讓你覺得安全的地方，可能正在悶死你。"
+}},
+
+// === 原型 3：樹的年輪 ===
+{archetype:"treerings",themes:["general","career","love"],energy:"positive",
+story:"一棵老樹被砍倒了，人們數它的年輪，發現有些年圈得大、有些年圈得小。「這一圈一定是好年。」一個人說。「不一定。」老樹說，「最寬的那一圈，是那年我活下來的證據。」",
+actions:{
+overall:"{cards}指出你正在累積一圈重要的年輪。{time}，這段日子之後會證明它的份量。",
+direction:"你不會知道哪段路最有價值。{time}，先走，後面回頭看才看得出來。",
+promotion:"你的累積不是徒勞。{cards}說，{time}，你會發現這幾年正是你最有份量的年輪。",
+growth:"成長不是一條直線。{cards}揭示了，{time}的這段經歷會成為你最重要的紋路。",
+relationship:"你們一起走過的路會變成年輪。{time}，繼續走，會更深。",
+default:"{time}，你正在累積一段有份量的時間。"
+}},
+
+{archetype:"treerings",themes:["general","career","love"],energy:"balanced",
+story:"年輕的樹問老樹：「為什麼有些年的圈大，有些年的圈小？」老樹說：「因為有雨水多的年，也有乾旱的年。」年輕樹說：「那乾旱的年不是浪費了嗎？」老樹說：「乾旱的年，根會往下扎得更深。」",
+actions:{
+relationship:"{cards}指出這段關係正處在「往下扎根」的時期。{time}，外面看不出進展，但底下在加深。",
+overall:"{time}的這段平淡不是停滯。{cards}說：你的根在變深。",
+direction:"你以為自己沒在前進。{cards}揭示——你在往下長。{time}，這是必要的階段。",
+growth:"成長有時候是往上長，有時候是往下扎。{time}，這次是往下。",
+career:"事業沒有大進展不代表停滯。{time}，這是扎根的季節。",
+default:"{time}，看不見的成長也是成長。"
+}},
+
+{archetype:"treerings",themes:["general","career","love"],energy:"shadow",
+story:"一棵樹一直在數自己的年輪，數來數去總覺得不夠多。它羨慕旁邊那棵高大的老樹。直到有一天，森林裡刮了大風，那棵老樹倒了。年輕的樹才明白——它一直在追求的「高大」，原來是有代價的。",
+actions:{
+overall:"{cards}揭露了一個盲點——你一直在跟誰比較？{time}，那個對象的代價，你可能不想付。",
+direction:"你以為自己「不夠」。{cards}說，{time}，先別急著長大，看看你身邊「長大」的人都過得怎樣。",
+promotion:"你想要的位置，可能有你看不見的代價。{time}，先看清楚再決定要不要追。",
+growth:"成長不一定是「更多」，有時候是「夠了」。{time}，學會停下來。",
+event:"你在追求一個別人定義的「成功」。{cards}說，{time}，先問自己是不是真的想要。",
+default:"{time}，不是所有的「更高」都值得追。"
+}},
+
+// === 原型 4：河流入海 ===
+{archetype:"river",themes:["general","love","career"],energy:"positive",
+story:"一條河從山上流下來，一路上它繞了很多彎。它有時候很沮喪，覺得自己走得太曲折了。但有一天它看見大海，才發現——所有它經過的地方、繞過的彎，都讓它變得更深、更寬。",
+actions:{
+direction:"{cards}說：你走過的每一段路都不是繞遠。{time}，你會看見它們匯成一片海。",
+overall:"你的人生看似曲折，但{cards}揭示——你正在匯入更大的格局。{time}，繼續走。",
+career:"你的職涯轉折不是失誤。{cards}說，{time}，你會看見這些路怎麼組合成你的力量。",
+direction:"{time}，相信你走過的每一段。即將到來的是你的海。",
+growth:"你以為自己繞了遠路。{cards}說，{time}，正是這些彎讓你成為深的那個。",
+default:"{time}，你走過的路會被證明都有意義。"
+}},
+
+{archetype:"river",themes:["general","love","career"],energy:"balanced",
+story:"河流到一塊大石頭前面，它停下來想：「我該繞過去，還是穿過去？」石頭說：「你可以兩個都試。」河流花了幾年繞過去，又花了幾百年穿過去。它最後說：「兩個都是路。」",
+actions:{
+switch:"{cards}指出沒有絕對正確的選擇。{time}，繞過或穿過，都會通向你要去的地方。",
+ex:"復合或不復合，{cards}說都是路。{time}，重要的不是選對，是選了就走下去。",
+house:"買或不買，{time}都不是壞選擇。重點是想清楚你能承受的時間尺度。",
+overall:"{time}的這個選擇，{cards}說沒有對錯——只有快慢。",
+direction:"{time}，別困在「哪條路是對的」。兩條都能通。",
+default:"{time}，選哪條路都不會錯，重點是別停下來。"
+}},
+
+{archetype:"river",themes:["general","love","career"],energy:"shadow",
+story:"一條河執意要直走，它不繞彎。它撞到山就想穿過去，撞到石頭就想推開。後來它在山腳下變成一個湖——不能再流動，也不能再前進。",
+actions:{
+crush:"{cards}揭露了一個真相——你太想直線達成。{time}，這段曖昧需要繞一點彎才到得了終點。",
+switch:"你想立刻有答案，但{cards}說：{time}，這條路需要轉幾個彎。",
+career:"你太硬了。{cards}指出，{time}，學會繞路才不會變成死水。",
+relationship:"你想要關係按你的方式發展。{time}，但有時候繞一下，反而到得了。",
+debt:"想要立刻解決問題會變成更大的問題。{time}，慢一點，繞一點。",
+default:"{time}，硬碰硬不會讓你前進，會讓你停下來。"
+}},
+
+// === 原型 5：登山者 ===
+{archetype:"climber",themes:["career","general","love"],energy:"positive",
+story:"兩個人爬同一座山。一個人一直盯著山頂，一邊爬一邊嘆氣：「還這麼遠。」另一個人看著腳下的路，每走一步就笑一下。後來他們都到了山頂。但只有一個人記得路上的風景。",
+actions:{
+promotion:"{cards}說：別只盯著結果。{time}，享受過程的人才走得到頂。",
+career:"你已經在往上爬了。{cards}揭示，{time}，看一下你已經走過的路。",
+direction:"{time}，方向不會錯。{cards}說：享受路上的每一步。",
+growth:"成長不是一夜長大。{cards}指出，{time}，你的進步就在每一個今天。",
+startup:"{time}，創業不是衝刺，是登山。{cards}說：穩定地走，別只看終點。",
+default:"{time}，看看你已經走多遠了。"
+}},
+
+{archetype:"climber",themes:["career","general","love"],energy:"balanced",
+story:"一個登山者爬到一半，他想：「我該繼續往上，還是回頭？」山風對他說：「兩個都可以。但你得先知道你為什麼來。」",
+actions:{
+switch:"{cards}說：先別管「該不該」。{time}，先問自己「我為什麼當初要爬這座山」。",
+direction:"你迷茫，是因為你忘了當初為什麼開始。{time}，回到那個原點問自己。",
+overall:"{cards}指出一個轉折點。{time}，不是「該不該繼續」，是「初衷還在不在」。",
+relationship:"你們關係到了一個高度。{time}，問問自己當初為什麼選擇彼此。",
+growth:"你以為自己迷路。{cards}說：{time}，先確認你要去哪。",
+default:"{time}，先問初衷，再決定方向。"
+}},
+
+{archetype:"climber",themes:["career","general","love"],energy:"shadow",
+story:"一個登山者爬了很高，他喘著氣往下看，發現自己已經看不見起點。他突然害怕——「我為什麼要爬上來？」他想往下走，但回程比上來還辛苦。他卡在那裡，不上不下。",
+actions:{
+switch:"{cards}揭露了一個真相——你卡在中間。{time}，要嘛全力往上，要嘛勇敢下山。卡著最痛。",
+career:"你在現職卡了太久。{cards}說：{time}，現在這個位置不是答案，做決定吧。",
+relationship:"你們在一個尷尬的高度。{time}，{cards}說：是時候往前走或往回走，不要停在這裡。",
+direction:"{cards}指出迷茫的根源——你不敢承認上來的不是你想要的山。{time}，承認了，路就有了。",
+ex:"你卡在「該不該回頭」裡太久了。{cards}說：{time}，下不下都比卡著好。",
+default:"{time}，做決定。卡在中間最累。"
+}},
+
+// === 原型 6：學步的孩子 ===
+{archetype:"toddler",themes:["general","love","career"],energy:"positive",
+story:"一個剛學走路的孩子，跌倒了七次。他每次都哭，但每次都站起來。第八次他成功了。後來有人問他：「你怎麼這麼勇敢？」他說：「我沒有勇敢，我只是不知道可以放棄。」",
+actions:{
+interview:"{cards}說：別讓「失敗」這個概念進到你腦子裡。{time}，繼續站起來就對了。",
+startup:"你已經跌倒過了，{cards}指出，{time}，那不是退步，那是學會走路的方式。",
+crush:"{time}，被拒絕一次不代表結束。孩子跌倒七次才會走路。",
+growth:"你不需要「勇敢」，你只需要不停止。{time}，下一次嘗試會成功。",
+direction:"{time}，把「我不行」這個念頭從你腦子裡丟出去。",
+default:"{time}，跌倒不是失敗，停下來才是。"
+}},
+
+{archetype:"toddler",themes:["general","love","career"],energy:"balanced",
+story:"學步的孩子摔倒了，他抬頭看媽媽。媽媽沒有衝過去扶他，只是溫柔地笑。孩子哭了一聲，然後自己爬起來。媽媽說：「我相信你能自己起來。」",
+actions:{
+crush:"{cards}說：別期待對方來救你。{time}，這次的進展得靠你自己。",
+career:"你在等別人推你一把。{cards}指出，{time}，那個人是你自己。",
+relationship:"關係不是誰來扶誰。{time}，學會自己站起來，反而會更靠近。",
+direction:"你想要有人指路。{cards}說，{time}，這條路只有你能走。",
+growth:"成長就是學會自己起來。{time}，這次別等別人。",
+default:"{time}，自己站起來，是任何人能給你的最大禮物。"
+}},
+
+{archetype:"toddler",themes:["general","love","career"],energy:"shadow",
+story:"一個學步的孩子，摔倒之後就再也不肯站起來了。「太痛了。」他說。父母不停鼓勵他，但他坐在地上，看著別人走過去。十年後他還是不會走——不是因為他不能，是因為他不肯。",
+actions:{
+crush:"{cards}揭露了一個真相——你被那次失敗困住了。{time}，那次的痛已經過了，是時候站起來了。",
+ex:"那次分手讓你不敢再愛。{cards}說：{time}，但坐在地上不會讓你比較不痛。",
+career:"你被一次失敗嚇住了。{time}，{cards}指出：這次你得逼自己再試一次。",
+growth:"你用「過去的痛」當藉口太久了。{cards}說：{time}，那個痛已經過了，留下來的只剩你自己。",
+direction:"{time}，迷茫不是真的迷茫，是你不肯再站起來。",
+default:"{time}，那次的痛已經結束了。讓自己站起來。"
+}},
+
+// ═══════════════════════════════════════════
+// 🚪 CHOICE & OPPORTUNITY (7-11)
+// ═══════════════════════════════════════════
+
+// === 原型 7：岔路口 ===
+{archetype:"crossroads",themes:["career","love","general"],energy:"positive",
+story:"一個旅人走到岔路口。左邊的路平坦寬闊，右邊的路崎嶇狹窄。他問路邊的老人該走哪條。老人說：「你想去哪裡？」旅人說：「我想去一個從沒去過的地方。」老人笑了：「那你就不能選你走過的那條路。」",
+actions:{
+switch:"{cards}指出了一條你沒走過的路。{time}，如果你想要不同的結果，就不能再做一樣的選擇。",
+startup:"你問的不是「該不該」，是「敢不敢」。{time}，那條崎嶇的路才是通往新地方的。",
+ex:"{cards}在說：你已經知道答案了。{time}，不要再回到那條你走過的路。",
+direction:"迷茫不是你的問題，是你太想要保險。{time}，選那條讓你心跳的路。",
+house:"{cards}指向那個新的方向。{time}，別再等所有條件都完美。",
+default:"{time}，選你沒走過的那條路。"
+}},
+
+{archetype:"crossroads",themes:["career","love","general"],energy:"balanced",
+story:"旅人走到岔路口，左右各看了很久。他坐下來，發現岔路口本身就有一棵樹、有陰涼、有風景。他在那裡待了一整天，然後選了一條路。後來他想起來，那一整天的休息，反而讓他走得比急著上路的人更遠。",
+actions:{
+switch:"你不用今天就決定。{time}，{cards}允許你停在岔路口，先看清楚兩邊的風景。",
+house:"{cards}在說「再等等」。{time}，先別出手，但也別停止觀察。",
+invest:"兩個選項各有風險。{time}，停在岔路口本身就是一種策略。",
+overall:"{cards}揭示了一個轉折點。{time}，重要的不是衝動決定，是讓答案自己成熟。",
+direction:"迷茫沒關係，{time}是「停下來看路」的時候，不是「拼命往前衝」的時候。",
+default:"{time}，停下來不是浪費時間，是讓答案成熟。"
+}},
+
+{archetype:"crossroads",themes:["career","love","general"],energy:"shadow",
+story:"旅人走到岔路口，左邊的路平坦，右邊的路崎嶇。他選了平坦的那條，走了很遠才發現，這條路他已經走過。原來他一直在繞圈，是因為他每次都選同樣的那條。",
+actions:{
+ex:"{cards}揭露了一個真相——你不是沒有選擇，你是一直選同一個。{time}，這次該不一樣了。",
+switch:"你不是運氣不好，是你習慣選那條路。{time}，這次試試你一直拒絕的選項。",
+direction:"迷茫的根源是你一直在繞圈。{time}，回到岔路口，看看你忽略的那條路。",
+family:"{cards}指出你在家人之間反覆陷入同樣的模式。{time}，要打破循環，得先承認你也在創造這個循環。",
+event:"事情變成現在這樣不是偶然，{time}，看清楚你每次都是怎麼選的。",
+default:"{time}，你一直在繞圈，是因為你一直選同一條路。"
+}},
+
+// === 原型 8：燈塔 ===
+{archetype:"lighthouse",themes:["love","general","social"],energy:"positive",
+story:"海上有一座燈塔，它從來不追船。它只是站在那裡，發出穩定的光。每艘需要它的船，都會自己找到它。它沒有跑去任何地方，但它幫助了無數人。",
+actions:{
+crush:"你不需要追著對方跑。{cards}說：{time}，做那個發光的人——對的人看見光會自己靠近。",
+single:"{cards}指出，{time}，與其去找對的人，不如先讓自己變成光。",
+relationship:"穩定就是最大的吸引力。{time}，繼續做那個讓對方安心的存在。",
+community:"{time}，{cards}說：別追流量，做有價值的內容。真正需要的人會找到你。",
+overall:"{time}，站穩自己。所有屬於你的，都會自己來。",
+default:"{time}，做那個發光的人，不要做追船的人。"
+}},
+
+{archetype:"lighthouse",themes:["love","general","social"],energy:"balanced",
+story:"燈塔對海說：「為什麼有時候船看見我，有時候沒有？」海說：「不是你的光弱了，是有時候霧太大。霧會散的，你只要繼續發光。」",
+actions:{
+crush:"{cards}說：對方最近的疏離可能是「霧」，不是你不夠好。{time}，繼續做自己。",
+single:"你最近沒遇到對的人，{cards}指出不是你的問題。{time}，霧會散的。",
+community:"{time}，你的內容沒看到效果，可能是時機問題。繼續發光。",
+overall:"{cards}說：你做得很好，只是大環境有霧。{time}，別否定自己。",
+direction:"你以為自己不夠好。{time}，{cards}揭示：你只是在霧裡，光還在。",
+default:"{time}，看不見不代表不存在。繼續發光。"
+}},
+
+{archetype:"lighthouse",themes:["love","general","social"],energy:"shadow",
+story:"一座燈塔太想要被看見，它開始追船。它離開了原來的位置，跟著船跑。後來它發現：當它開始追，光就不穩定了。船反而找不到它了。",
+actions:{
+crush:"{cards}揭露了一個真相——你太想要對方注意你了。{time}，停止追，回到你原來的位置。",
+ex:"你一直在追那個已經離開的人。{cards}說：{time}，回到你的位置——他需要的時候會看見你。",
+relationship:"你太緊抓對方了。{time}，鬆開手，讓對方自己回頭。",
+community:"{cards}指出你在追流量，反而失去了自己。{time}，回到原來的內容。",
+someone:"你太用力想得到對方的肯定。{time}，{cards}說：那個用力本身正在推開他。",
+default:"{time}，停止追逐。回到你的位置，發光。"
+}},
+
+// === 原型 9：鑰匙 ===
+{archetype:"key",themes:["general","career","love"],energy:"positive",
+story:"一個人在門外找鑰匙，找了一整晚。後來有人問他：「你確定鑰匙在這裡？」他說：「不確定，但這裡有路燈。」那個人說：「找鑰匙要去掉的地方找，不是在好找的地方找。」",
+actions:{
+direction:"{cards}揭示了一個真相——你一直在「好找」的地方找答案。{time}，去你避開的地方看看。",
+growth:"你的答案不在舒適區。{time}，{cards}說：去那個你一直繞開的話題裡找。",
+career:"你一直在找職涯的鑰匙，但你只看你會的地方。{time}，去學那個你不會的。",
+crush:"{cards}說：你不敢去問的那個問題，就是鑰匙。{time}，問出來。",
+event:"答案就在你一直迴避的那個面向。{time}，去那裡看看。",
+default:"{time}，鑰匙在你不敢去的地方。"
+}},
+
+{archetype:"key",themes:["general","career","love"],energy:"balanced",
+story:"一個人有一串鑰匙，他試了又試，每一把都不對。他生氣地把鑰匙丟掉。後來他發現——他試的是別人的門。他自己的門，鑰匙一直就在他口袋裡。",
+actions:{
+direction:"{cards}指出——你一直在解別人的題。{time}，問自己：這個問題真的是我的嗎？",
+switch:"你在試「該不該轉職」，但{cards}說：{time}，可能不是這個問題。",
+crush:"你問「他喜不喜歡我」，但{cards}揭示：{time}，真正的問題是「我喜不喜歡我自己」。",
+growth:"你想要的成長，鑰匙不在你以為的門上。{time}，重新問問題。",
+overall:"{time}，先問對問題，再找答案。",
+default:"{time}，你問錯問題了。換一個。"
+}},
+
+{archetype:"key",themes:["general","career","love"],energy:"shadow",
+story:"一個人有一把鑰匙，他知道哪扇門是對的。但他一直不開。「萬一開了之後我不喜歡呢？」他問。「萬一不是我想像的呢？」鑰匙在他手裡握了十年，門也鎖了十年。",
+actions:{
+ex:"{cards}揭露了你的核心——你怕的不是失去，是發現真相。{time}，把那扇門打開。",
+crush:"你怕表白後失去對方。但{cards}說：{time}，不開門，你也沒有他。",
+switch:"你怕轉職後發現自己不行。{time}，那把鑰匙在你手裡——別讓它生鏽。",
+direction:"你知道答案，你只是不敢承認。{time}，{cards}說：開門吧。",
+event:"{time}，你一直拖延的那個決定，鑰匙就在你手上。",
+default:"{time}，你早就知道答案了。"
+}},
+
+// === 原型 10：橋 ===
+{archetype:"bridge",themes:["general","love","career"],energy:"positive",
+story:"兩岸之間有一座橋。橋上的人說：「我已經走了一半，要回頭嗎？」橋說：「你已經在我身上了——前面和後面一樣遠。但前面有新的世界，後面只有你已經知道的。」",
+actions:{
+switch:"{cards}說：你已經走到一半了。{time}，回頭跟往前一樣遠，但往前有新東西。",
+ex:"{cards}指出，你已經走出來一段了。{time}，別回頭——前面的世界比較大。",
+direction:"你以為自己還沒開始。{cards}揭示，{time}，你已經走了很多了。",
+crush:"你們的關係已經往前了。{time}，別退回曖昧——前面有更深的可能。",
+overall:"{time}，你已經在橋上了。繼續走，不要回頭。",
+default:"{time}，往前比較近。"
+}},
+
+{archetype:"bridge",themes:["general","love","career"],energy:"balanced",
+story:"一個人站在橋上，他不確定要走過去還是回去。橋下的水告訴他：「不管你走哪邊，這座橋都會在這裡。你可以先過去看看，不喜歡再回來。」",
+actions:{
+switch:"{cards}說：你不用一次決定一輩子。{time}，先過去看看，不喜歡可以回來。",
+house:"{cards}指出，{time}，這個決定不是不可逆的。先試試。",
+ex:"你怕復合之後又分開。{time}，{cards}說：先過去看看也行——橋不會消失。",
+crush:"你怕表白後關係變了。{time}，但不試一下，你也不知道。",
+direction:"{time}，先選一個方向走走看，不對可以再換。",
+default:"{time}，沒有什麼決定是不能改的。先走過去看看。"
+}},
+
+{archetype:"bridge",themes:["general","love","career"],energy:"shadow",
+story:"一個人在橋的中央站了很多年。他既不過去也不回頭。後來他發現，他不是被橋困住——是他自己把自己困在橋上的。",
+actions:{
+ex:"{cards}揭露了一個你不想承認的真相——你不是出不去，你是不肯走。{time}，做決定吧。",
+switch:"你已經考慮了太久。{time}，{cards}說：留下或離開都比卡著好。",
+direction:"{time}，迷茫不是真的——你只是不肯選。{cards}指出：選了就走。",
+crush:"你卡在曖昧裡。{cards}說：{time}，這個位置最累，但也是你自己選的。",
+event:"{time}，{cards}揭示：那個決定，是你一直拖著不做的。",
+default:"{time}，做決定。卡著最累。"
+}},
+
+// === 原型 11：門縫的光 ===
+{archetype:"doorlight",themes:["love","career","general"],energy:"positive",
+story:"有一扇門，光從門縫透出來。一個人站在門前看了很久。他知道光是真的，但他不確定門後面有什麼。後來他想——「就算門後面什麼都沒有，至少光是真的。」他推開了門，光照在他臉上。",
+actions:{
+crush:"{cards}揭示，{time}，那個訊號是真的。推門需要勇氣，但光是真的。",
+single:"你感覺到那個人對你有意思。{cards}說：{time}，相信你的直覺，往前一步。",
+interview:"你感覺機會在那裡。{time}，{cards}指出——別等完美的時機，光在透了。",
+direction:"{time}，{cards}說：你感覺到的方向是對的。別再等。",
+startup:"那個機會的訊號很明顯。{time}，推開那扇門。",
+default:"{time}，你感覺到的光，是真的。"
+}},
+
+{archetype:"doorlight",themes:["love","career","general"],energy:"balanced",
+story:"光從門縫透出來，但裡面也有風聲。一個人站在門前想：「這是邀請還是警告？」門說：「都是。光是真的，風也是真的。看你準備好了沒有。」",
+actions:{
+switch:"{cards}說：機會是真的，但風險也是。{time}，問自己準備好了沒有。",
+crush:"{cards}指出，這份吸引力是真的，但你們的差異也是。{time}，先想清楚再推門。",
+invest:"報酬是真的，風險也是真的。{time}，準備好了再進場。",
+ex:"{cards}揭示——你想復合的感覺是真的，但讓你們分開的原因也是。{time}，兩個都要看見。",
+overall:"{time}，光和風都是禮物——別只看你想看的。",
+default:"{time}，看到全貌再決定。"
+}},
+
+{archetype:"doorlight",themes:["love","career","general"],energy:"shadow",
+story:"一個人站在門前已經很久了。他每天都跟自己說「明天就推開」，但每天都沒推。後來門縫的光慢慢變暗——不是門後沒光了，是時間到了，那扇門要關了。",
+actions:{
+crush:"{cards}揭露了一個真相——對方的耐心不是無限的。{time}，再不行動，那扇門會關。",
+interview:"你已經拖了太久。{time}，機會的窗口會關。{cards}說：現在就推。",
+ex:"{cards}指出，他願意給你的時間有限。{time}，做決定。",
+startup:"{time}，再等下去，那個機會會被別人推開。",
+single:"{cards}說：那個人不會永遠等你。{time}，主動一點。",
+default:"{time}，時間不是無限的。光會變暗。"
+}},
+
+// ═══════════════════════════════════════════
+// ⏳ WAITING & TIMING (12-16)
+// ═══════════════════════════════════════════
+
+// === 原型 12：退潮的海 ===
+{archetype:"lowtide",themes:["love","general","money"],energy:"positive",
+story:"一個人不懂為什麼海會退潮。他覺得海背叛了他。後來有一天他發現——退潮不是離開，是海在準備下一次的浪。每一次的退潮，都讓下一次的浪更有力量。",
+actions:{
+crush:"對方最近的疏離不是結束，是準備。{cards}告訴你，{time}會有一道浪推過來。",
+single:"你以為桃花消失了，其實是退潮。{time}，那個對的人正在水的另一邊。",
+promotion:"{cards}揭示一個被忽略的真相——機會不是消失，是在重組。{time}，準備好下一波。",
+income:"收入的低潮不代表結束。{time}，新的財源正在水底成形。",
+overall:"你正在退潮期，這不是壞事。{time}，蓄積的能量會在某個時間點一次釋放。",
+default:"{time}，退潮是為了讓浪更大。"
+}},
+
+{archetype:"lowtide",themes:["love","general","money"],energy:"balanced",
+story:"一個人盯著海面看了很久。他不確定現在是退潮還是漲潮。後來有個漁夫經過告訴他：「不用盯，看那塊石頭就知道。」石頭浸在水裡多久、露出多少——海自己會告訴你它要做什麼。",
+actions:{
+crush:"不要盯著對方的訊息看。{cards}提醒你：去看那些更穩定的訊號——他平常怎麼對你。",
+invest:"別被短期波動迷惑。{time}，看那些不會變的東西——基本面、長期趨勢。",
+colleague:"{cards}說：不要在情緒裡判讀對方。{time}，看他的行為模式，那才是真的。",
+someone:"你想知道對方在想什麼，{cards}建議你去看他做了什麼，而不是說了什麼。",
+overall:"{time}，與其焦慮地猜測，不如找一個穩定的參照點。",
+default:"{time}，看事實，不要看情緒。"
+}},
+
+{archetype:"lowtide",themes:["love","general","money"],energy:"shadow",
+story:"一個人站在岸邊，海一直退、一直退。他害怕海再也不會回來。後來有個老人說：「你看見海退到哪裡為止了嗎？」「沒有。」「那就還沒結束。」",
+actions:{
+ex:"{cards}揭示了一個你不想聽的事實——退潮還沒到底。{time}，先別急著判斷這是不是終點。",
+debt:"財務的低點還沒到，但這也代表還沒到反彈的時候。{time}，先穩住，別急著做大動作。",
+health:"身體的不適不是「沒救了」，是還在排出舊的東西。{time}，給身體更多時間。",
+growth:"你正在一個深層的清理期。{cards}說：別急著問什麼時候結束。",
+event:"事情還沒到谷底，{time}，這不是壞消息——這代表你還在過程裡，不是終局。",
+default:"{time}，過程還沒走完。別急。"
+}},
+
+// === 原型 13：月相 ===
+{archetype:"moonphases",themes:["general","love","money"],energy:"positive",
+story:"新月的時候，月亮幾乎看不見。一個人問月亮：「你怎麼不見了？」月亮說：「我沒有不見，我在準備。」滿月的時候，那個人才明白——所有月亮看似消失的時候，都是它在累積能量。",
+actions:{
+overall:"{cards}說：你最近看起來低調，但{time}，你會以滿月的姿態出現。",
+single:"你的能量正在累積。{time}，{cards}指出——你會在某個時間點被人看見。",
+promotion:"{time}，你的累積會被看見。{cards}說：別擔心現在的低調。",
+luck:"{cards}揭示，運勢正在累積。{time}，會有一次明亮的時機。",
+income:"收入正在低潮，但{time}，這是滿月前的新月。",
+default:"{time}，準備中的力量是最強的。"
+}},
+
+{archetype:"moonphases",themes:["general","love","money"],energy:"balanced",
+story:"月亮對地球說：「我為什麼要這樣圓了又缺、缺了又圓？」地球說：「因為你不是太陽。太陽一直亮，會把人燒乾。你的圓缺讓人記得潮汐、季節、時間。」",
+actions:{
+overall:"你想要「一直好」，但{cards}說：{time}，圓缺才是生命的節奏。",
+relationship:"關係不會永遠熱烈，也不會永遠冷淡。{time}，學會這個節奏。",
+growth:"{cards}指出，{time}，你的低潮不是失敗，是節奏的一部分。",
+career:"事業不會一直上升。{time}，這個下降也是必要的。",
+direction:"你以為迷茫是壞事。{time}，{cards}說：那是新月，新的方向在醞釀。",
+default:"{time}，圓缺都是節奏。"
+}},
+
+{archetype:"moonphases",themes:["general","love","money"],energy:"shadow",
+story:"月亮看著自己變細，它害怕了。「我會不會就這樣消失？」它哭著問星星。星星說：「你之前消失過多少次了？每一次都回來了。為什麼這次你不相信？」",
+actions:{
+ex:"{cards}揭露了你的恐懼——你怕這次的低谷再也走不出來。{time}，你以前走出來過，這次也會。",
+overall:"{time}，這不是第一次低潮，{cards}說：你以前都活下來了。",
+health:"你害怕這次的病不會好。{time}，但你的身體有自癒力——你以前也好過。",
+debt:"{cards}指出，你怕這次的財務崩盤。{time}，你以前撐過，這次也能。",
+direction:"你怕這次真的找不回方向。{cards}說：{time}，你以前迷茫過，每次都回到自己。",
+default:"{time}，你以前活下來過，這次也會。"
+}},
+
+// === 原型 14：釀酒人 ===
+{archetype:"winemaker",themes:["career","general","love"],energy:"positive",
+story:"釀酒人把葡萄壓爛、封進桶裡，然後就走開了。村民問他：「你不檢查嗎？」釀酒人說：「我越不去看它，它就越好。我的工作不是『催』，是『讓』。」",
+actions:{
+relationship:"{cards}說：別一直檢查關係的進度。{time}，讓它自己發酵——你越不催，它越深。",
+career:"你的職涯需要時間發酵。{time}，{cards}指出：別急著看結果。",
+crush:"你一直在看訊息、想對方的意圖。{time}，{cards}說：別看它，讓它釀。",
+growth:"成長不是催出來的。{time}，把自己交給時間。",
+startup:"{cards}說：你的計畫需要醞釀期。{time}，別急著上市。",
+default:"{time}，別催。讓它釀。"
+}},
+
+{archetype:"winemaker",themes:["career","general","love"],energy:"balanced",
+story:"年輕的釀酒人問老釀酒人：「我們的酒會釀成什麼味道？」老釀酒人說：「你想要它變成什麼味道？」「最好的味道。」「那它會變成自己的味道，不是你想的味道。」",
+actions:{
+relationship:"你對對方有期待。{cards}說：{time}，鬆開那個期待——對方會成為他自己。",
+career:"你想要事業按你規劃的方向。{time}，但它有它的方向。",
+crush:"你希望對方喜歡的「你」是特定版本。{time}，{cards}指出：他喜歡的會是真實的你。",
+growth:"你想要成長成「某個樣子」。{time}，{cards}說：放開那個樣子，你會變成你該變成的。",
+direction:"{time}，別規劃太緊。讓人生釀成它自己的樣子。",
+default:"{time}，鬆開期待，讓事情變成它自己。"
+}},
+
+{archetype:"winemaker",themes:["career","general","love"],energy:"shadow",
+story:"釀酒人不耐煩了，他每天都去開桶子看一次。「進度好慢。」他抱怨。後來他把酒提早裝瓶。喝的人說：「這酒沒釀好。」他才明白——他每次開桶，氧氣就跑進去，他每一次的「檢查」都在破壞它。",
+actions:{
+relationship:"{cards}揭露了一個真相——你的焦慮在傷害關係。{time}，停止「檢查」對方的心意。",
+crush:"你每天問自己「他怎麼想」，但這個問本身在破壞它。{time}，停止。",
+career:"{cards}說：你的不耐煩在毀掉計畫。{time}，把手放開。",
+ex:"你想復合的急切感正在推遠對方。{time}，{cards}指出：別碰它。",
+growth:"你太想看見成長的證明。{time}，那個「想看見」本身在阻礙它。",
+default:"{time}，你的著急本身就是問題。"
+}},
+
+// === 原型 15：冬眠的種子 ===
+{archetype:"dormantseed",themes:["general","love","career"],energy:"positive",
+story:"一顆種子在土裡睡了一整個冬天。鳥兒飛過，問它：「你怎麼還不發芽？」種子說：「外面太冷了，現在發芽就會死。」春天到了，它一發芽就長得比別人快——因為它整個冬天都在累積。",
+actions:{
+direction:"{cards}說：{time}的低潮不是退步。你在累積，春天還沒到。",
+growth:"{time}，你看起來沒進展。但{cards}指出：你在累積爆發的力量。",
+career:"你最近的「停滯」是冬眠。{time}，春天到的時候，你會跑得最快。",
+single:"{cards}揭示，{time}你不該活躍。等對的季節，你會被看見。",
+overall:"{time}，這不是壞時候，是準備好時候。",
+default:"{time}，蟄伏是力量。"
+}},
+
+{archetype:"dormantseed",themes:["general","love","career"],energy:"balanced",
+story:"一顆種子問土壤：「我什麼時候該醒？」土壤說：「你會知道的。」「怎麼知道？」「當你感覺到溫度的時候。冷的時候別動，溫的時候別等。」",
+actions:{
+switch:"你問該不該轉職。{cards}說：{time}，溫度還沒到——但快了。感覺它。",
+crush:"你問「現在表白還是再等等」。{time}，{cards}指出：等你感覺到對的溫度。",
+invest:"{cards}說：{time}市場的溫度還沒對。但快了。",
+overall:"{time}，別問什麼時候。感覺溫度。",
+direction:"{cards}揭示，{time}，你會在對的溫度下知道方向。",
+default:"{time}，等對的溫度。"
+}},
+
+{archetype:"dormantseed",themes:["general","love","career"],energy:"shadow",
+story:"一顆種子等了一個春天、兩個春天、三個春天。它每年都覺得「還不是時候」。後來別的植物都長成森林了，它還在土裡。它才明白——有時候，「不是時候」只是「不敢」的藉口。",
+actions:{
+ex:"{cards}揭露了一個真相——你說「還沒到時候」太多次了。{time}，其實你是不敢。",
+startup:"你準備了三年了。{cards}說：{time}，「再準備一下」是藉口。",
+crush:"你說「現在不對」說了多久？{time}，{cards}指出：你怕的是被拒絕，不是時機。",
+direction:"你說自己在等對的方向，但{cards}說：{time}，你只是不敢選任何一個。",
+switch:"{time}，你等的不是時機，是勇氣。",
+default:"{time}，「不是時候」是不敢的藉口。"
+}},
+
+// === 原型 16：農夫等雨 ===
+{archetype:"farmerrain",themes:["general","money","career"],energy:"positive",
+story:"農夫播了種，然後抬頭看天。天上沒有雲。他沒有焦慮，沒有質問——他只是去做別的事。鄰居問他：「你不怕乾死嗎？」他說：「雨會來。它從來沒有不來過。」",
+actions:{
+overall:"{cards}說：{time}，事情會發生。你不需要焦慮地監督。",
+income:"你播了種了。{time}，{cards}指出：收成會來。",
+luck:"{cards}揭示：好運不會跳過你。{time}，做你該做的，剩下的交給時間。",
+direction:"{time}，你不需要催。該來的會來。",
+single:"{cards}說：你做好了你能做的。{time}，那個人會出現。",
+default:"{time}，相信過程。雨會來。"
+}},
+
+{archetype:"farmerrain",themes:["general","money","career"],energy:"balanced",
+story:"農夫等了很久還沒下雨，他開始想：「是不是我種錯地方了？」他去問老農夫。老農夫看了看，說：「不是地方錯了。是這片雲還沒到。下個禮拜會下。」",
+actions:{
+career:"{cards}說：你的努力沒有錯。{time}，只是時間還沒到。",
+invest:"{cards}指出，標的沒選錯，{time}，市場的雨還沒下。",
+crush:"你做的事都對。{time}，只是對方的「雨」還沒到。",
+overall:"{time}，問題不是「對不對」，是「時候到了沒」。",
+income:"{cards}說：你的努力會收成。{time}，雲在路上了。",
+default:"{time}，你沒做錯，只是還沒到時候。"
+}},
+
+{archetype:"farmerrain",themes:["general","money","career"],energy:"shadow",
+story:"農夫等雨等到瘋了。他開始每天朝天空大喊：「下雨啊！」他喊了一整年。後來下雨了，但他已經把田地踩爛了。",
+actions:{
+crush:"{cards}揭露——你太著急了，急到傷害了關係本身。{time}，停下來。",
+ex:"你一直催著他回應你。{cards}說：{time}，停止——你的焦急在推開他。",
+debt:"你的焦慮在讓財務狀況更糟。{time}，{cards}指出：停下手上的「拯救」動作。",
+overall:"{time}，你的著急正在破壞事情本身。",
+health:"你太想「立刻好」。{time}，這份著急正在傷害你的身體。",
+default:"{time}，你的著急正在毀掉你等的東西。"
+}},
+
+// ═══════════════════════════════════════════
+// 🔥 ACTION & COURAGE (17-21)
+// ═══════════════════════════════════════════
+
+// === 原型 17：弓與箭 ===
+{archetype:"bow",themes:["career","love","general"],energy:"positive",
+story:"一個射手把弓拉到最滿。手開始抖，弓開始呻吟。旁邊的人說：「快放手，弦要斷了。」射手說：「不，弦不會斷，斷的是還沒準備好的箭。」說完，他放手了，箭射穿了遠方的目標。",
+actions:{
+crush:"你已經拉滿了弓——{cards}說，放手的時候到了。{time}，那句話、那個動作，現在做。",
+interview:"{cards}的能量告訴你，你已經準備好了。{time}，把心理戲放掉，去做就對了。",
+promotion:"你等待的時機就是現在。{time}，把那個提案、那個對話、那個爭取——一次到位。",
+startup:"{cards}說：再等下去，弦會斷。{time}，把箭射出去。",
+community:"{cards}指出{time}是釋放能量的時機。把累積的內容、想法、計畫——一次發出去。",
+default:"{time}，放手。你已經準備好了。"
+}},
+
+{archetype:"bow",themes:["career","love","general"],energy:"balanced",
+story:"射手把弓拉到一半，停下來。旁人問：「你不射嗎？」射手說：「箭射出去前，要先看清楚風。」他等了很久，等到風停了一瞬間，才放手。",
+actions:{
+crush:"你的直覺說「還不是時候」——{cards}同意。{time}，再觀察一陣子，對的瞬間會出現。",
+switch:"別在情緒高點做決定。{time}，等到你能冷靜評估的那一刻，再放手。",
+invest:"{cards}在說「等風停」。{time}，現在進場太早，但別走開——機會在醞釀。",
+interview:"實力你有，但時機要看準。{time}，等到對方最需要的時候出手。",
+house:"{cards}的訊息是「再等等」。{time}，正確的物件還沒出現。",
+default:"{time}，等風停，再放手。"
+}},
+
+{archetype:"bow",themes:["career","love","general"],energy:"shadow",
+story:"射手一直拉弓，拉了很久。久到他自己都忘了原本要射什麼。後來他放下弓，去喝了一杯水。他想起來目標的時候，發現自己原本根本不想射那個目標。",
+actions:{
+crush:"{cards}揭露一個你可能不想面對的真相——你還在追求對方，是因為慣性還是真的喜歡？{time}，先停下來問問自己。",
+ex:"你想復合，但{cards}問你：你真的想，還是你不想承認結束？{time}，先把弓放下。",
+startup:"{cards}指出你可能在「為了做而做」。{time}，停下來，重新問你最初的目的。",
+direction:"你以為的目標可能不是真正的目標。{time}，把弓放下，喝一杯水。",
+growth:"你太久沒停下來了。{cards}說：{time}，重點不是更努力，是看清楚為什麼努力。",
+default:"{time}，停下來。問自己為什麼。"
+}},
+
+// === 原型 18：點火種 ===
+{archetype:"firestart",themes:["career","general","love"],energy:"positive",
+story:"一個人想要生一堆大火，他不停丟柴進去——但他一直沒點火。旁邊的人說：「先點一個小火種。」他不耐煩：「我要的是大火，不是小火。」「大火都是從小火種開始的。」",
+actions:{
+startup:"{cards}說：別等所有條件齊全。{time}，先點一個小火種——它會自己長大。",
+career:"你在等「完美的時機」開始。{cards}指出，{time}：先做一件小事。",
+crush:"你在想「怎麼正式表白」。{time}，{cards}說：先一個小動作。",
+single:"{time}，別想著「找對的人」。{cards}說：先去做你會遇見人的事。",
+direction:"{cards}揭示，{time}，先動起來。火種會引燃方向。",
+default:"{time}，先做一件小事。"
+}},
+
+{archetype:"firestart",themes:["career","general","love"],energy:"balanced",
+story:"一個人點了火種，火還沒燒起來。他開始焦慮，加更多柴、吹更大的風。火反而熄了。老人說：「火種需要時間和呼吸——不是更多柴。」",
+actions:{
+relationship:"{cards}說：你想加速關係。{time}，但火種需要呼吸——別加太多柴。",
+startup:"你想立刻把生意做大。{cards}指出，{time}：別焦慮——讓火種自己長。",
+crush:"你想立刻確認關係。{time}，{cards}說：給對方時間呼吸。",
+career:"{cards}揭示：你太急著證明自己。{time}，給事情時間。",
+growth:"成長不是用力擠出來的。{time}，給自己空間。",
+default:"{time}，火種需要空間，不是更多柴。"
+}},
+
+{archetype:"firestart",themes:["career","general","love"],energy:"shadow",
+story:"一個人點了火，但他一直不滿意。火太小、煙太多、不夠亮。他不停去戳它、攪它，火滅了。他生氣地說：「這火不行。」他不知道，那團火本來會成為篝火的。",
+actions:{
+relationship:"{cards}揭露了一個真相——你對關係太挑剔了。{time}，停止戳它，它會自己長。",
+career:"你對自己的工作太挑剔。{cards}說：{time}，先讓它存在，再讓它變好。",
+crush:"你對對方有太多期待。{time}，那團火本來會燒起來——別戳它。",
+growth:"你對自己的成長太挑剔。{time}，{cards}指出：那也是火。",
+single:"你對遇到的人太挑剔。{time}，火還沒燒起來就被你戳熄了。",
+default:"{time}，別戳火。讓它燒。"
+}},
+
+// === 原型 19：揚帆 ===
+{archetype:"sail",themes:["career","general","love"],energy:"positive",
+story:"船長對著海說：「我等了三年的風。」海說：「風一直在。是你的帆沒升起來。」船長馬上升起了帆，那一刻，他發現原來風從來沒走。",
+actions:{
+startup:"{cards}揭示一個真相——機會一直在，是你還沒準備好。{time}，升帆。",
+career:"{cards}說：{time}，別再等「對的時機」——你準備好的時候，時機就到。",
+crush:"你在等對方先動。{time}，{cards}指出：你升帆，風就在。",
+direction:"{time}，{cards}說：方向一直在，你還沒出發。",
+interview:"{cards}揭示，機會在那裡。{time}，把你的「帆」升起來。",
+default:"{time}，風一直在，等你升帆。"
+}},
+
+{archetype:"sail",themes:["career","general","love"],energy:"balanced",
+story:"船長準備出海，他檢查帆、檢查繩、檢查每一個細節。「你不出發嗎？」「我要確保萬無一失。」「但你已經檢查七次了。」「我再檢查一次。」一年過去，他還在檢查。",
+actions:{
+startup:"{cards}說：你已經準備夠了。{time}，再準備也不會更安全。出發。",
+switch:"你問了所有人意見，{cards}指出：{time}，你需要的不是更多資訊，是決定。",
+interview:"你已經演練了無數次。{time}，{cards}說：再演練不會更好。",
+crush:"你想了太多種表白方式。{time}，選一個，就那個。",
+overall:"{cards}揭示：你的「準備」已經變成「拖延」。{time}，出發。",
+default:"{time}，準備夠了。出發。"
+}},
+
+{archetype:"sail",themes:["career","general","love"],energy:"shadow",
+story:"船長把船停在港口，他每天看著海說：「明天就出發。」三十年過去了，他在港口去世。他的船從來沒出過港。",
+actions:{
+ex:"{cards}揭露了一個你不想面對的真相——你一直說「明天」說了多久？{time}，現在或永遠不。",
+startup:"你的計畫已經停留在「想」很多年了。{cards}說：{time}，今天，不然永遠不會。",
+crush:"你想了多少次「下次見面就說」。{time}，下次就是現在。",
+switch:"{time}，{cards}指出：你的「明天」已經拖了太久。",
+direction:"你說「等我準備好」說了多少年？{time}，準備好不會自己發生。",
+default:"{time}，今天，或永遠不。"
+}},
+
+// === 原型 20：跳水者 ===
+{archetype:"diver",themes:["career","love","general"],energy:"positive",
+story:"跳水者站在跳台上，他猶豫了一下。他想：「我會痛嗎？」但他沒讓自己想完——他跳了。在空中的時候他發現，最痛苦的時刻是站在跳台上的那一刻，不是跳下來的那一刻。",
+actions:{
+interview:"{cards}說：你最痛苦的是「準備跳」，不是「跳」本身。{time}，不要想完，直接跳。",
+crush:"{cards}指出，{time}：表白之前的猶豫是最累的。跳了反而輕鬆。",
+startup:"{time}，別讓自己想太多細節。{cards}揭示：跳，然後解決問題。",
+switch:"{cards}說：你已經在跳台上太久了。{time}，跳。",
+single:"{time}，跨出那一步前的恐懼，比跨出去本身難受。",
+default:"{time}，跳。別讓自己想完。"
+}},
+
+{archetype:"diver",themes:["career","love","general"],energy:"balanced",
+story:"教練對跳水者說：「不要看水。看天空。」跳水者問：「為什麼？」教練說：「看水，你會想水有多深、會不會痛、會不會死。看天空，你會想自己有多自由。」",
+actions:{
+overall:"{cards}說：別看你怕的東西。{time}，看你想要的。",
+crush:"別一直想「被拒絕怎麼辦」。{time}，想想「成功會多開心」。",
+startup:"{cards}揭示：別只看風險。{time}，看你想創造的東西。",
+direction:"你一直看著恐懼。{time}，把眼睛抬起來。",
+growth:"{cards}指出，{time}，你的恐懼是真的，但它不是你該看的方向。",
+default:"{time}，看天空，不要看水。"
+}},
+
+{archetype:"diver",themes:["career","love","general"],energy:"shadow",
+story:"跳水者站在跳台上太久了，腿已經抖到站不穩。「我跳！」他喊。「我這次真的跳！」他喊了十次都沒跳。最後他爬下來，覺得自己很失敗。但他不知道，光是上跳台已經比大多數人勇敢了。",
+actions:{
+crush:"{cards}揭露——你已經跳台上站很久了。{time}，這次不跳沒關係。但別否定自己。",
+ex:"你一直說「我要試試復合」但都沒做。{time}，先別逼自己。{cards}說：先承認你還沒準備好。",
+interview:"你準備了無數次但都沒去。{time}，先別自責，{cards}指出：你能站上跳台已經夠勇敢。",
+startup:"{cards}說：你不是失敗，你只是還沒準備好。{time}，給自己時間。",
+direction:"{time}，你比你以為的勇敢——光是面對問題就值得肯定。",
+default:"{time}，沒跳沒關係，別否定自己。"
+}},
+
+// === 原型 21：敲門人 ===
+{archetype:"knocker",themes:["career","love","general"],energy:"positive",
+story:"一個人去敲門，第一次沒人應。他敲第二次。然後第三次。鄰居說：「人不在你別敲了。」他說：「我相信他在裡面。」第七次的時候，門開了。",
+actions:{
+interview:"{cards}說：別因為一次拒絕就放棄。{time}，繼續敲。",
+career:"{cards}指出，{time}：你的努力會被看見。別在第六次的時候放棄。",
+crush:"{time}，{cards}說：不要因為對方一次冷淡就退。繼續，真誠地。",
+startup:"你的計畫被拒絕過。{time}，{cards}揭示：繼續敲，會有人開門。",
+community:"{cards}說：堅持發聲。{time}，會有人聽見。",
+default:"{time}，繼續敲。會有人開門。"
+}},
+
+{archetype:"knocker",themes:["career","love","general"],energy:"balanced",
+story:"敲門人敲了十次，門開了。但開門的人說：「我不是你要找的人。」他才發現——他敲對了「努力」，但敲錯了「對象」。",
+actions:{
+crush:"{cards}揭示，你很努力——但對方可能不是對的人。{time}，誠實面對。",
+career:"{cards}說：你很努力，但這條路可能不適合你。{time}，重新評估。",
+ex:"你一直在敲他的門。{time}，{cards}指出：他可能不是要等你的人。",
+interview:"你準備得很好，但{cards}說：{time}，這個職位可能本來就不適合你。",
+direction:"{time}，你在敲對的方法、錯的門。",
+default:"{time}，問問自己：你敲的是不是對的門。"
+}},
+
+{archetype:"knocker",themes:["career","love","general"],energy:"shadow",
+story:"一個人在敲一扇門，敲了十年。他每天都來，每天都敲。後來有人告訴他：「這扇門裡面沒人。」他說：「我知道。但我不知道還能去哪。」",
+actions:{
+ex:"{cards}揭露——你敲那扇門，不是因為他在，是因為你不敢去敲別的。{time}，承認這件事。",
+crush:"你一直在敲那個沒回應的人。{cards}說：{time}，你怕的不是他不開，你怕的是沒有別的門。",
+career:"{cards}指出，你卡在那份工作，是因為你害怕找新的。{time}，承認這個。",
+direction:"{time}，你在原地敲門，是因為你不敢出發。",
+debt:"{time}，{cards}說：你重複同一個失敗模式，是因為不敢試新的。",
+default:"{time}，你敲那扇門，不是因為它對，是因為你不敢去別的。"
+}},
+
+// ═══════════════════════════════════════════
+// 💝 RELATIONSHIPS & CONNECTION (22-26)
+// ═══════════════════════════════════════════
+
+// === 原型 22：兩棵樹 ===
+{archetype:"twotrees",themes:["love","social","general"],energy:"positive",
+story:"森林裡有兩棵樹，本來相距很遠。它們的根在地底下慢慢生長，多年後在土壤深處交織在一起。地面上的人看不見，但兩棵樹自己知道——它們早就連在一起了。",
+actions:{
+crush:"{cards}揭示了一個真相——你和對方的連結比你以為的更深。{time}，不需要刻意推進，根會自己找到方向。",
+relationship:"你們之間有一些別人看不見的東西。{time}，繼續守護那些根。",
+single:"對的人會在對的時間出現。{time}，把你自己這棵樹養好，你已經比想的更接近了。",
+friends:"真正的朋友不需要每天聯絡。{cards}說，那段友誼比你以為的更牢。",
+family:"表面的距離不代表斷裂。{time}，根還在。",
+default:"{time}，深層的連結比表面更真實。"
+}},
+
+{archetype:"twotrees",themes:["love","social","general"],energy:"balanced",
+story:"兩棵樹靠得很近。它們爭著要陽光，爭著要養分，根纏在一起，互相妨礙生長。後來園丁說：「你們其實只需要一點點距離。」他輕輕分開了它們的根。第二年，兩棵樹都長得比以前更高。",
+actions:{
+relationship:"你們靠得太近了。{cards}提醒你，{time}，一點空間反而能讓關係更健康。",
+family:"愛不需要每天黏在一起。{time}，給彼此一些距離，反而能更靠近。",
+friends:"{cards}指出一段你太用力維護的友誼。{time}，鬆一點，讓它自然呼吸。",
+someone:"你想得太多了。{time}，不是這段關係有問題，是你太緊張。",
+marriage:"{cards}指出兩個人都需要自己的空間。{time}，這不是疏離，是健康。",
+default:"{time}，距離反而讓關係更靠近。"
+}},
+
+{archetype:"twotrees",themes:["love","social","general"],energy:"shadow",
+story:"兩棵樹的根長在了一起。其中一棵生病了，另一棵也跟著枯萎。它們才發現——當你的根跟另一個人的根纏太緊，你會分不清楚是你在痛，還是對方在痛。",
+actions:{
+relationship:"{cards}揭示了一個關鍵——你和對方的界線模糊了。{time}，重新找回你自己的根。",
+ex:"你不確定自己是想他，還是只是習慣他。{cards}說：{time}，先把自己抽出來，再回頭看。",
+family:"你承擔了太多不是你的情緒。{time}，分清楚那些根哪些是你的。",
+someone:"你太在意對方了。{cards}提醒你，{time}，先找回自己的中心。",
+growth:"{cards}指出一個界線課題。{time}，學會說「這不是我的責任」。",
+default:"{time}，找回你自己的根。"
+}},
+
+// === 原型 23：鏡子 ===
+{archetype:"mirror",themes:["general","love","social"],energy:"positive",
+story:"一個人對鏡子說：「為什麼別人看我都很冷淡？」鏡子說：「你今天對我笑了嗎？」那個人愣了一下，對鏡子笑了。鏡子裡的他也笑了。他走出去，才發現——別人也對他笑了。",
+actions:{
+single:"{cards}說：你想被人喜歡。{time}，先喜歡你自己。",
+social:"你抱怨人際冷淡。{cards}指出，{time}，先看看你給出去的是什麼。",
+crush:"你問對方喜不喜歡你。{time}，{cards}揭示：先問你怎麼對待自己。",
+growth:"{time}，世界是鏡子，你給什麼就收到什麼。",
+overall:"{cards}說：你想要的回應，先給出去。",
+default:"{time}，先給，才會收。"
+}},
+
+{archetype:"mirror",themes:["general","love","social"],energy:"balanced",
+story:"鏡子對人說：「不要害怕我照出來的東西。」人說：「為什麼？」鏡子說：「因為我照出的，永遠是你心裡已經有的。你看到醜，是你心裡看自己醜；你看到光，是你心裡有光。」",
+actions:{
+crush:"{cards}揭示，{time}：你看對方的方式，是你看自己的方式。",
+relationship:"你抱怨對方的缺點。{time}，{cards}指出：那也是你自己沒接受的部分。",
+someone:"你討厭那個人某個特質。{time}，{cards}說：那是你也有但拒絕承認的。",
+growth:"{time}，你看到的世界，就是你內在的投射。",
+family:"你跟家人的衝突，{cards}說：{time}，是你跟自己的衝突。",
+default:"{time}，看見對方，就是看見自己。"
+}},
+
+{archetype:"mirror",themes:["general","love","social"],energy:"shadow",
+story:"一個人對鏡子很生氣。「為什麼我看起來這麼糟？」他打破了鏡子。但打破鏡子並沒有改變他的樣子——他還是一樣的。鏡子只是說了實話而已。",
+actions:{
+ex:"{cards}揭露——你在生對方的氣，但他只是照出你自己。{time}，問題不在他。",
+crush:"你討厭對方某個反應。{time}，但{cards}說：那是你自己也不喜歡的部分。",
+work:"{cards}指出，你跟同事的衝突，{time}，是你不接受自己的某面。",
+family:"你跟家人的爭吵，{time}，{cards}揭示：本質是你跟自己的戰爭。",
+growth:"{time}，打破鏡子不會改變事實。先看見自己。",
+default:"{time}，別怪鏡子。看看自己。"
+}},
+
+// === 原型 24：共傘 ===
+{archetype:"umbrella",themes:["love","social","general"],energy:"positive",
+story:"下雨了，兩個人共撐一把傘。傘不夠大，兩個人都有一邊肩膀濕了。但他們都沒說。後來雨停了，他們發現——濕的那邊肩膀，反而比乾的那邊溫暖。",
+actions:{
+relationship:"{cards}說：真正的關係不是「不會有人濕」，是「我們一起濕」。{time}，這是好的關係的樣子。",
+marriage:"{cards}指出，{time}，你們一起承擔了什麼。那是最深的連結。",
+family:"你們之間有共同經歷的雨。{time}，那是你們最珍貴的東西。",
+friends:"{cards}揭示：真正的朋友是一起淋雨的人。{time}，珍惜這個。",
+crush:"{time}，如果你願意跟他一起淋雨，那就是了。",
+default:"{time}，一起淋濕的肩膀最溫暖。"
+}},
+
+{archetype:"umbrella",themes:["love","social","general"],energy:"balanced",
+story:"兩個人共撐一把傘，其中一個人一直把傘往對方那邊推。另一個人說：「你自己也會濕。」「沒關係，我習慣了。」「但這樣不是『一起』，這是『犧牲』。我不想要這種關係。」",
+actions:{
+relationship:"{cards}揭示——你一直在付出。{time}，但這不是健康的「一起」。",
+marriage:"你習慣了讓自己淋濕。{cards}說：{time}，對方要的是平等的肩膀。",
+family:"你一直犧牲自己。{time}，{cards}指出：他們其實希望你也照顧自己。",
+crush:"{time}，你太想當好人。{cards}說：對方要的是真實的你。",
+someone:"你過度配合對方。{time}，這份「配合」反而拉開了距離。",
+default:"{time}，別只是付出。一起，才是真的一起。"
+}},
+
+{archetype:"umbrella",themes:["love","social","general"],energy:"shadow",
+story:"兩個人共撐一把傘，其中一個人一直在抱怨：「為什麼是我撐？」「為什麼我這邊濕？」另一個人沒說話，默默走進雨裡——一個人淋著雨往前走。",
+actions:{
+ex:"{cards}揭露了一個真相——你的抱怨推開了對方。{time}，他不是不愛你，是受不了。",
+relationship:"你最近一直在挑對方的毛病。{cards}說：{time}，他會走進雨裡的。",
+marriage:"{time}，你的抱怨正在把對方推遠。{cards}指出：停下來。",
+family:"你一直數落家人。{time}，{cards}說：他們會選擇沉默，然後距離。",
+friends:"你最近對朋友太挑剔。{time}，再下去，傘下只剩你一個人。",
+default:"{time}，抱怨不會讓對方更愛你，只會讓他走。"
+}},
+
+// === 原型 25：舞蹈 ===
+{archetype:"dance",themes:["love","social","career"],energy:"positive",
+story:"兩個人跳舞，他們不需要說話。一個進，一個退；一個轉，一個跟。他們之間有一種看不見的對話。後來音樂停了，他們發現——他們從來沒這麼了解過彼此。",
+actions:{
+relationship:"{cards}說：你們有一種不用說話的默契。{time}，珍惜這個。",
+crush:"{cards}揭示，{time}，你跟對方之間已經有一種節奏感了。",
+friends:"{time}，這段友誼像跳舞——不用解釋，就懂。",
+marriage:"{cards}指出，你們的默契比你想的更深。{time}，繼續跳。",
+someone:"{time}，你和對方之間有一個無聲的對話。",
+default:"{time}，你們之間的節奏感是真的。"
+}},
+
+{archetype:"dance",themes:["love","social","career"],energy:"balanced",
+story:"舞蹈老師對學生說：「你跳得太用力了。」「為什麼？」「因為你想控制每一步。跳舞不是控制，是回應。對方進，你退；對方退，你進。」",
+actions:{
+relationship:"{cards}說：你太想控制這段關係。{time}，學會回應，而不是主導。",
+crush:"你想主導發展節奏。{cards}指出，{time}，回應對方的步調反而會更順。",
+marriage:"{cards}揭示，你跳得太用力。{time}，鬆一點，讓對方有空間。",
+work:"你想主導合作。{time}，{cards}說：學會回應，會更好。",
+someone:"{time}，別總是你先動。讓對方先動，你回應。",
+default:"{time}，跳舞是回應，不是控制。"
+}},
+
+{archetype:"dance",themes:["love","social","career"],energy:"shadow",
+story:"兩個人跳舞，但他們不在聽同一首音樂。一個跟著快歌的節奏，一個跟著慢歌的旋律。他們努力配合，但越努力越錯。後來他們才明白——不是他們不會跳，是他們聽的根本不是同一首歌。",
+actions:{
+relationship:"{cards}揭露——你們配合不上，不是你們的錯。{time}，你們可能想要的根本不一樣。",
+ex:"{cards}指出，你們分手不是因為誰錯。{time}，是你們聽的不是同一首歌。",
+marriage:"{time}，{cards}說：你們的衝突來自價值觀的根本差異。",
+crush:"{cards}揭示，你們努力配合，但其實不對盤。{time}，誠實面對這個。",
+work:"你跟同事一直磨擦。{time}，可能你們的工作方式根本不同。",
+default:"{time}，不是你不會跳，是你們聽的不是同一首歌。"
+}},
+
+// === 原型 26：編織 ===
+{archetype:"weave",themes:["love","social","general"],energy:"positive",
+story:"織布的人說：「布要美，要靠每一條線。」學徒問：「哪一條最重要？」「最重要的不是任何一條，是它們怎麼交織。」",
+actions:{
+relationship:"{cards}說：關係的美在交織。{time}，珍惜你們互動的方式。",
+family:"{time}，{cards}指出：家庭的美不在誰最強，在你們怎麼互相支持。",
+friends:"{cards}揭示，{time}，這群朋友的美在你們的相處方式。",
+marriage:"你們的婚姻有一張美麗的紋理。{time}，繼續織。",
+community:"{time}，你的社群力量來自於連結，不是個人。",
+default:"{time}，美在交織，不在單一。"
+}},
+
+{archetype:"weave",themes:["love","social","general"],energy:"balanced",
+story:"織布的人說：「布上有一條線斷了。」學徒慌了：「整匹布都毀了！」織布人說：「不會。我們補上一條新線。布會繼續，紋路也會繼續。」",
+actions:{
+ex:"{cards}說：失去一段關係，不會讓你的人生毀了。{time}，會有新的線進來。",
+friends:"一段友誼結束了。{cards}指出，{time}，你的人生這匹布還會繼續。",
+family:"家裡有人離開了。{time}，{cards}揭示：失去不代表毀滅。新的會進來。",
+relationship:"關係出了問題。{time}，可以修補。別放棄整匹布。",
+overall:"{time}，斷掉的線可以補，整匹布還在。",
+default:"{time}，一條斷線不會毀掉整匹布。"
+}},
+
+{archetype:"weave",themes:["love","social","general"],energy:"shadow",
+story:"織布的人發現有條線錯了，他停下來想拆掉重織。學徒說：「但你織了很久了。」「對，所以更要重織。錯誤越久不處理，整匹布的紋路都會歪。」",
+actions:{
+relationship:"{cards}揭露——這段關係有一個你一直避開的問題。{time}，越拖越歪。現在處理。",
+family:"{cards}說：你跟家人之間有一個沒解決的結。{time}，再不處理，所有關係都會被影響。",
+marriage:"{time}，{cards}指出：那個你們一直不談的事，正在歪掉所有的紋路。",
+work:"你跟同事之間有未解的衝突。{time}，越久越難處理。",
+debt:"{cards}揭示，你的財務問題你一直拖。{time}，現在重織。",
+default:"{time}，錯的東西越早處理越好。"
+}},
+
+// ═══════════════════════════════════════════
+// 🌌 WISDOM & AWARENESS (27-30)
+// ═══════════════════════════════════════════
+
+// === 原型 27：小燈籠 ===
+{archetype:"lantern",themes:["general","love","career"],energy:"positive",
+story:"一個人在黑暗中走路，手裡拿著一盞燈。燈只能照亮前方三步的距離。他很害怕，因為他看不見更遠的路。但他每走三步，燈就照亮下一個三步。就這樣，他走完了整條路。",
+actions:{
+direction:"你不需要看見全部的路。{cards}說：{time}，下一步就好。",
+overall:"你想要看見全貌。{time}，{cards}指出：你只需要看清楚下一步。",
+startup:"你想要完整的計畫。{cards}揭示，{time}，先走下一步，下下一步會出現。",
+growth:"{time}，{cards}說：成長不需要藍圖。下一個動作就好。",
+crush:"{time}，你想要保證。但你只需要做下一個決定。",
+default:"{time}，下一步就好。"
+}},
+
+{archetype:"lantern",themes:["general","love","career"],energy:"balanced",
+story:"提燈的人問：「為什麼我的燈這麼小？」星星說：「因為大燈會讓你看遠處，但看不清眼前。你的燈剛剛好——足夠讓你不踩空，但不會讓你忘記現在。」",
+actions:{
+direction:"{cards}說：你抱怨自己看不遠。{time}，但你的「小燈」是為了讓你專注現在。",
+overall:"{time}，{cards}指出：別嫌你看到的少。你看到的剛好夠用。",
+growth:"你想看見成長的全貌。{cards}揭示，{time}，你只需要看見今天。",
+career:"{time}，別焦慮看不到五年後。看到下個月就好。",
+crush:"你想知道結局。{time}，但你只需要知道下次怎麼回他訊息。",
+default:"{time}，看清楚現在，比看遠處更重要。"
+}},
+
+{archetype:"lantern",themes:["general","love","career"],energy:"shadow",
+story:"提燈的人不滿意他的燈。「我要更亮的燈，照得更遠。」他放下小燈，去找大火把。等他回頭，小燈已經熄了。他兩手空空，站在更深的黑暗裡。",
+actions:{
+direction:"{cards}揭露——你嫌棄你已有的，去追更大的。{time}，你會失去現在的。",
+career:"你抱怨現職不夠好，但{cards}說：{time}，你還沒得到的不一定更好。",
+relationship:"你嫌對方不夠完美，{time}，{cards}指出：別把眼前的燈放下。",
+ex:"你想要更激烈的愛。{time}，但你忽略了那盞穩定的燈。",
+overall:"{time}，{cards}揭示：別放下你有的，去追看不見的。",
+default:"{time}，珍惜你手上的小燈。"
+}},
+
+// === 原型 28：棋手 ===
+{archetype:"chess",themes:["career","general","love"],energy:"positive",
+story:"棋手看著棋盤，他不是在想下一步。他在想第五步、第十步。對手問他：「你怎麼總是贏？」他說：「因為我看的是棋局，不是這一步。」",
+actions:{
+career:"{cards}說：別只看眼前的職位。{time}，看五年後你要在哪。",
+startup:"{cards}指出，{time}，你的策略需要看遠一點。",
+direction:"{time}，先想三年後你要怎樣，然後反推現在該做什麼。",
+overall:"你被當下困住了。{cards}揭示，{time}，抬頭看格局。",
+relationship:"你只看眼前的爭吵。{time}，{cards}說：看你們五年後想要的關係。",
+default:"{time}，看格局，不要只看當下。"
+}},
+
+{archetype:"chess",themes:["career","general","love"],energy:"balanced",
+story:"棋手看了很久，他不確定下一步。老師說：「不要看你手裡的棋子，看對手會怎麼動。」棋手換了角度，突然看到——他之前以為的好棋，其實是個陷阱。",
+actions:{
+career:"{cards}說：別只想自己怎麼做。{time}，想想競爭對手會怎麼動。",
+invest:"{cards}指出，{time}，看市場其他玩家在做什麼。",
+crush:"你一直想自己該怎麼做。{time}，{cards}揭示：想想對方在想什麼。",
+work:"你跟同事衝突。{time}，先站在他角度看一次。",
+overall:"{time}，換個角度看局面，你會發現新東西。",
+default:"{time}，看對手會怎麼動。"
+}},
+
+{archetype:"chess",themes:["career","general","love"],energy:"shadow",
+story:"棋手想得太多了。他考慮每一種可能，每一個變化。對手已經走了三步，他還在想第一步。後來他輸了——不是因為他不會，是因為他想太多。",
+actions:{
+switch:"{cards}揭露——你想得太多。{time}，動起來，再修正。",
+ex:"你分析了所有的可能性。{time}，{cards}說：行動，別只是分析。",
+startup:"你規劃了所有細節。{time}，{cards}指出：先做，邊做邊改。",
+crush:"你想了一百種他會怎麼反應。{time}，先試一個。",
+direction:"{time}，{cards}揭示：你不缺分析，缺行動。",
+default:"{time}，別想了。動。"
+}},
+
+// === 原型 29：古井 ===
+{archetype:"well",themes:["general","love","growth"],energy:"positive",
+story:"一個人在古井邊汲水。井很深，他要拉很長的繩子。但每次拉上來的水都特別清涼，特別有甘甜。他才明白：越深的井，水越好。",
+actions:{
+growth:"{cards}說：你在挖深層的東西。{time}，越深越好，別放棄。",
+relationship:"{cards}指出，{time}，你們的對話開始觸及深處。這是好的。",
+direction:"你在問深層的問題。{cards}揭示，{time}，這條路會給你最深的答案。",
+crush:"{time}，你跟對方的對話越來越深。這是好的兆頭。",
+overall:"{time}，{cards}說：你在做深的工作。繼續挖。",
+default:"{time}，深的東西最珍貴。"
+}},
+
+{archetype:"well",themes:["general","love","growth"],energy:"balanced",
+story:"汲水的人對井說：「你的水越來越少了。」井說：「不是水少了，是我累了。我需要時間恢復。等等，我會滿。」",
+actions:{
+overall:"{cards}說：你最近耗盡了。{time}，是時候停下來補充。",
+career:"你最近燃燒太多。{cards}指出，{time}，井需要時間蓄水。",
+relationship:"你給太多了。{time}，{cards}揭示：先休息，井會再滿。",
+growth:"{time}，你的成長需要間歇。{cards}說：別逼自己一直前進。",
+health:"你的身體在說「我累了」。{time}，聽它。",
+default:"{time}，井需要時間蓄水。"
+}},
+
+{archetype:"well",themes:["general","love","growth"],energy:"shadow",
+story:"汲水的人一直拉繩子，但繩子越拉越輕。最後他發現——井已經乾了。他一直在拉一個沒水的井，是因為他不肯承認井乾了。",
+actions:{
+ex:"{cards}揭露——這段關係已經乾了。{time}，你拉不出水了。",
+relationship:"你一直在從這段關係要東西，但{cards}說：{time}，井乾了。",
+career:"你一直在現職找意義。{time}，{cards}指出：那口井可能乾了。",
+debt:"{time}，那個你一直期待的金錢來源——可能已經沒了。",
+direction:"你一直問同一個問題。{time}，但那口井已經給不出答案了。",
+default:"{time}，承認井乾了，去找新的井。"
+}},
+
+// === 原型 30：問星星 ===
+{archetype:"stars",themes:["general","direction","growth"],energy:"positive",
+story:"一個人晚上看著星星，他覺得自己很渺小、很迷茫。他對星星說：「我不知道我該往哪裡走。」星星說：「沒關係。你不需要知道。你只需要繼續走。我會在這裡。」",
+actions:{
+direction:"{cards}說：你不需要知道全部。{time}，繼續走。",
+overall:"{time}，{cards}指出：迷茫是正常的。你沒有走丟。",
+growth:"你問了很多人生大問題。{time}，{cards}揭示：問題本身就是答案的開始。",
+crush:"你不確定該怎麼辦。{time}，繼續做你自己。",
+event:"{time}，{cards}說：你會找到方向。先別停下。",
+default:"{time}，迷茫沒關係。繼續走。"
+}},
+
+{archetype:"stars",themes:["general","direction","growth"],energy:"balanced",
+story:"一個人問星星：「你為什麼這麼穩定？」星星說：「因為我看的不是『今天』，我看的是時間。當你的眼光足夠長，今天的痛就只是一個小點。」",
+actions:{
+overall:"{cards}說：把眼光放長。{time}，現在的困難在三年後只是一個小事。",
+ex:"{cards}指出，{time}，分手很痛，但放在你的一生裡，這只是一個章節。",
+direction:"你被當下卡住。{time}，{cards}揭示：抬頭看星星——時間會解決很多事。",
+debt:"{time}，這次的財務壓力很真實。但放長眼光，你會度過。",
+growth:"{cards}說：別只看今天的進度。{time}，看你五年前到現在。",
+default:"{time}，把眼光放長。"
+}},
+
+{archetype:"stars",themes:["general","direction","growth"],energy:"shadow",
+story:"一個人對星星很生氣：「你為什麼不告訴我答案？」星星說：「我從來沒答應要告訴你答案。我只答應在這裡。」那個人沉默了——他才明白，他要的不是答案，是依靠。但他得自己走路。",
+actions:{
+direction:"{cards}揭露——你想要別人告訴你答案。{time}，但這條路得你自己走。",
+ex:"你問了很多人意見。{cards}說：{time}，沒人能告訴你該不該復合。",
+overall:"{time}，{cards}指出：你在找一個能替你決定的人。沒有這個人。",
+crush:"你問所有朋友該不該表白。{time}，他們不知道。你知道。",
+growth:"你想要有人帶你成長。{time}，{cards}揭示：沒人能替你成長。",
+default:"{time}，答案在你自己。"
+}}
+
+];
+// === PART B END ===
+// 共 90 個故事 = 30 原型 × 3 變體（positive / balanced / shadow）
+// ============================================================
+// PART C: Interpretation Engine + Story Selection + Closing
+// ============================================================
+
+// ===== Context Objects =====
+const CTX={
+love:{field:"感情",sub:"這段關係",aspect:"情感",verb:"在愛情中",area:"感情世界",obj:"對方"},
+career:{field:"事業",sub:"這份工作",aspect:"職涯",verb:"在事業上",area:"職場發展",obj:"機會"},
+money:{field:"財運",sub:"這筆財務",aspect:"財務",verb:"在財務上",area:"財務狀況",obj:"金錢"},
+social:{field:"人際",sub:"這段關係",aspect:"社交",verb:"在人際中",area:"人際網絡",obj:"對方"},
+general:{field:"綜合",sub:"這件事",aspect:"生活",verb:"目前",area:"整體局勢",obj:"事物"}
+};
+
+const SUBCTX={
+single:{topic:"桃花運",sub:"你的感情機緣",who:"那個對的人",what:"遇見新的感情對象"},
+crush:{topic:"曖昧關係",sub:"你和對方之間的曖昧",who:"對方",what:"這段曖昧的發展"},
+relationship:{topic:"交往關係",sub:"你們的感情",who:"伴侶",what:"感情的穩定與走向"},
+ex:{topic:"復合",sub:"這段過去的感情",who:"前任",what:"是否該回頭"},
+marriage:{topic:"婚姻",sub:"這段婚姻",who:"另一半",what:"婚姻中的課題"},
+promotion:{topic:"升遷",sub:"你的升遷機會",who:"主管",what:"升遷加薪的可能性"},
+switch:{topic:"轉職",sub:"這次轉職決定",who:"新的機會",what:"該留下還是離開"},
+startup:{topic:"創業",sub:"你的創業計畫",who:"這個事業",what:"創業的可行性與方向"},
+interview:{topic:"求職",sub:"這次面試",who:"新公司",what:"求職的結果與發展"},
+colleague:{topic:"職場關係",sub:"你和同事之間",who:"同事或主管",what:"職場人際的摩擦"},
+invest:{topic:"投資",sub:"這筆投資決策",who:"市場",what:"投資的時機與風險"},
+income:{topic:"收入",sub:"你的收入狀況",who:"財源",what:"正財收入的變化"},
+luck:{topic:"偏財",sub:"你的偏財運",who:"運勢",what:"意外之財的可能性"},
+house:{topic:"購屋",sub:"這個購屋決定",who:"房產",what:"該不該現在出手"},
+debt:{topic:"債務",sub:"你的財務困境",who:"債務",what:"財務壓力的根源"},
+family:{topic:"家人關係",sub:"你和家人之間",who:"家人",what:"家庭中的深層課題"},
+friends:{topic:"友情",sub:"這段友誼",who:"朋友",what:"友情的現況與走向"},
+work:{topic:"職場同事",sub:"你和同事的關係",who:"同事",what:"工作中的衝突根源"},
+someone:{topic:"特定某人",sub:"你和這個人之間",who:"這個人",what:"對方的態度與意圖"},
+community:{topic:"社群",sub:"你的社群經營",who:"受眾",what:"社群發展的趨勢"},
+overall:{topic:"整體運勢",sub:"你近期的整體狀態",who:"命運",what:"各方面的綜合走向"},
+direction:{topic:"人生方向",sub:"你的人生",who:"你的靈魂",what:"此刻最需要面對的課題"},
+growth:{topic:"心靈成長",sub:"你的內在",who:"內心",what:"靈性成長的深層模式"},
+health:{topic:"身心健康",sub:"你的身心狀態",who:"身體與心靈",what:"健康與壓力的平衡"},
+event:{topic:"特定事件",sub:"這件事",who:"事件本身",what:"事件的因果與走向"}
+};
+
+// ===== Reading Screen Renderer =====
+function showReading(chosen){
+const sp=SP[spread];
+document.getElementById("rd-title").textContent="✦ "+sp.name+" — 解讀 ✦";
+const area=document.getElementById("rd-cards");area.innerHTML="";
+const panels=document.getElementById("panels");panels.innerHTML="";
+
+let labels;
+if(spread==="compare"){
+const la=document.getElementById("cmp-a").value||curSub.cmpA||"選項A";
+const lb=document.getElementById("cmp-b").value||curSub.cmpB||"選項B";
+labels=[la+"-1",la+"-2",la+"-3",lb+"-1",lb+"-2",lb+"-3"];
+}else if(spread==="majors"){
+labels=[];
+const mjIdx=chosen.findIndex(c=>c.s==="major");
+chosen.forEach((c,i)=>{if(i<mjIdx)labels.push("探索牌 "+(i+1));else if(i===mjIdx)labels.push("✦ 主牌");else labels.push("輔佐牌 "+(i-mjIdx))});
+}else{labels=sp.labels}
+
+chosen.forEach((c,i)=>{
+const slot=document.createElement("div");slot.className="rd-slot";
+const lb=document.createElement("div");lb.className="sl";lb.textContent=labels[i]||"";
+const cc=document.createElement("div");cc.className="cc";
+cc.innerHTML='<div class="cd" id="rcd-'+i+'"><div class="cf cbk"><div class="cbs">✦</div><div class="cbt">TAROT</div></div><div class="cf cft">'+cardFrontHTML(c)+'</div></div>';
+slot.appendChild(lb);slot.appendChild(cc);area.appendChild(slot);
+
+const isRev=c.isReversed;
+const oriText=isRev?"逆位":"正位";
+const oc=isRev?"rv":"up";
+const detail=genCardParagraph(c,labels[i]||"",i);
+
+const mp=document.createElement("div");mp.className="mp";mp.id="mp-"+i;
+mp.innerHTML='<div class="ep-head" onclick="togglePanel('+i+')">'
++'<span class="mpn">'+c.fb+' '+c.c+'</span><span class="mpo '+oc+'">'+oriText+'</span>'
++'<span class="mpe">'+c.n+'</span><span class="ep-arrow" id="arrow-'+i+'">▼</span></div>'
++'<div class="ep-body" id="epb-'+i+'"><div class="mpm">'+detail+'</div></div>';
+panels.appendChild(mp);
+});
+
+const syn=document.createElement("div");syn.className="synth";syn.id="synth";
+syn.innerHTML='<div class="synth-title">✦ 綜合解讀 ✦</div><div class="synth-body">'+genReading(chosen)+'</div>';
+panels.appendChild(syn);
+goTo("reading");
+
+if(spread==="majors"){
+chosen.forEach((c,i)=>{const cd=document.getElementById("rcd-"+i);cd.classList.add("flipped");if(c.isReversed)cd.classList.add("reversed")});
+panels.querySelectorAll(".mp").forEach(p=>p.classList.add("show"));
+document.querySelectorAll(".ep-body").forEach(b=>{b.classList.add("open")});
+document.querySelectorAll(".ep-arrow").forEach(a=>a.classList.add("open"));
+setTimeout(()=>document.getElementById("synth").classList.add("show"),500);
+}else{
+chosen.forEach((c,i)=>{
+setTimeout(()=>{
+const cd=document.getElementById("rcd-"+i);cd.classList.add("flipped");if(c.isReversed)cd.classList.add("reversed");sparkle(cd);
+setTimeout(()=>{
+const mp=document.getElementById("mp-"+i);mp.classList.add("show");
+document.getElementById("epb-"+i).classList.add("open");
+document.getElementById("arrow-"+i).classList.add("open");
+},500);
+},500+i*800);
+});
+setTimeout(()=>document.getElementById("synth").classList.add("show"),500+chosen.length*800+600);
+}
+}
+
+// ===== Per-Card Paragraph Generator =====
+function cm(c){return c.isReversed?c.rv:c.up}
+function ori(c){return c.isReversed?"逆位":"正位"}
+
+function genCardParagraph(c,label,idx){
+const cx=CTX[cat]||CTX.general;
+const sx=SUBCTX[curSub?curSub.key:"overall"]||SUBCTX.overall;
+const tx=TIMECTX[curTime?curTime.key:"3m"]||TIMECTX["3m"];
+const m=cm(c);
+const isRev=c.isReversed;
+const isMajor=c.s==="major";
+
+const posIntro={
+"起因":pick(["在事情最初的起點，","回溯到一切的源頭，","追溯"+sx.sub+"的起因，"]),
+"發展":pick(["隨著事態的推進，","在中間的發展階段，","當事情逐漸展開時，"]),
+"結果":pick(["最終，事情指向的結局是：","一切匯聚之後，呈現的結果是：","在因果鏈的末端，"]),
+"近期":pick([tx.phrase+"，最先到來的變化是：","在最近的日子裡，","短期內你會首先感受到的是："]),
+"中期":pick(["隨著時間推移，","進入中段之後，","當近期的能量沉澱後，"]),
+"遠期":pick(["放眼更遠的未來，","在"+tx.short+"的尾聲，","長遠來看，"]),
+"事件起源":pick(["這一切的起點可以追溯到：","在事件的最初，有一股力量在推動：","種子是在那時候埋下的——"]),
+"關鍵年齡":"",
+"核心影響":pick(["而這段經歷至今仍在產生的影響是：","那個印記到今天依然在運作：","這股殘餘的能量表現為："]),
+"過去":pick(["回顧過去，","在此之前，影響"+sx.sub+"的背景是：","過去發生的事為現在埋下了伏筆——"]),
+"現在":pick(["此刻，你正處於：","眼下的狀態是：","如果要描述你現在的處境——"]),
+"挑戰":pick(["但是，最大的變數在於：","這裡是整個牌陣最需要留意的地方：","你需要跨越的關卡是："]),
+"未來":pick(["如果順應牌的指引，未來的畫面是：",""+tx.short+"，事情最可能走向：","在前方等著你的是："])
+};
+
+let intro=posIntro[label]||"";
+
+if(label==="關鍵年齡"){
+const age=getAge(c);
+const ageText=age===0?"在潛意識尚未成形之前":age<=6?"大約 "+age+" 歲，幼兒時期":age<=12?"大約 "+age+" 歲，童年時期":age<=14?"大約 "+age+" 歲，青少年初期":age<=18?"大約 "+age+" 歲，青少年時期":"大約 "+age+" 歲";
+return c.c+"（"+ori(c)+"）指向了一個關鍵的時間點——<strong>"+ageText+"</strong>。在那個年紀，"+pick(["一個重要的事件在你的"+cx.aspect+"中留下了深刻的印記","你經歷了某件至今仍在影響你的事","一段關鍵的經歷在那時成形"])+
+"。這張牌的能量是「"+m+"」，暗示當時的經歷帶有"+
+(isRev?pick(["某種阻礙或壓抑的性質","未被完整處理的情緒","一些需要被正視的陰影"])
+:pick(["正面但深刻的影響","某種天賦或模式的啟動","值得感恩的力量"]))+"。"+
+pick(["這個印記一直在潛移默化地影響著你對"+sx.topic+"的態度。","理解這個時間點，是解開當前困境的鑰匙。","覺察到這段記憶，療癒就已經開始了。"]);
+}
+
+const majorNote=isMajor?pick(["作為大阿爾克納，這張牌的份量特別重——它代表的不只是事件，而是靈魂層級的課題。","大阿爾克納的出現代表這不是小事，而是你生命中一個重要的轉折信號。",""]):"";
+
+const cardDesc=pick([
+intro+c.c+"以"+ori(c)+"的姿態出現，帶來了「"+m+"」的訊息。",
+intro+c.c+"（"+ori(c)+"）揭示了："+m+"。",
+intro+"這個位置出現了"+c.c+"（"+ori(c)+"），它的核心訊息是「"+m+"」。"
+]);
+
+const subContext=pick([
+"在"+sx.sub+"的脈絡下，"+pick([
+"這意味著"+(isRev?"你可能正面臨某些"+pick(["內在的阻力","需要調整的狀態","尚未處理的課題"]):"事情正朝著"+pick(["有利的方向","正面的軌道","健康的狀態"])+"發展")+"。",
+"這張牌提醒你"+(isRev?pick(["留意那些被忽略的訊號","不要迴避真正的問題","是時候面對不舒服的真相了"]):pick(["目前的方向是對的","你已經具備了需要的條件","這股正面的能量值得善加利用"]))+"。",
+(isRev?"具體來說，「"+m+"」在"+sx.topic+"的語境下，可能表現為"+pick(["一種停滯感","某個你不願面對的事實","一個需要被打破的舊模式"])+"。"
+:"具體來說，「"+m+"」在"+sx.topic+"中，代表"+pick(["一股正在推動你前進的力量","值得把握的積極訊號","一個正在成形的好機會"])+"。")
+])
+]);
+
+const closing=pick([
+majorNote+(isRev?pick(["但別擔心——逆位不代表壞事，它更像是一個溫柔的提醒：有些東西需要你重新審視。","逆位的出現是在說：調整方式，結果就會不同。","這是一個轉化的邀請，而非懲罰。"])
+:pick(["這股能量是你的助力，順著它走就對了。","把握這張牌帶來的正面訊號，"+tx.short+"會有明顯的進展。","信任這個方向，你已經在對的路上了。"])),
+""
+]);
+
+return cardDesc+" "+subContext+" "+closing;
+}
+
+// ===== Main Dispatcher =====
+function genReading(chosen){
+const cx=CTX[cat]||CTX.general;
+const sx=SUBCTX[curSub?curSub.key:"overall"]||SUBCTX.overall;
+const tx=TIMECTX[curTime?curTime.key:"3m"]||TIMECTX["3m"];
+if(spread==="cause")return genCause(chosen,cx,sx,tx);
+if(spread==="future")return genFuture(chosen,cx,sx,tx);
+if(spread==="core")return genCore(chosen,cx,sx,tx);
+if(spread==="situation")return genSituation(chosen,cx,sx,tx);
+if(spread==="compare")return genCompare(chosen,cx,sx,tx);
+if(spread==="majors")return genMajors(chosen,cx,sx,tx);
+return"";
+}
+
+// ===== Spread Generators =====
+
+// 1. Cause
+function genCause(cards,cx,sx,tx){
+const[c0,c1,c2]=cards;
+const ups=cards.filter(c=>!c.isReversed).length;
+const sum=pick([
+"簡單來說，"+sx.sub+"並非偶然。",
+"讓我把這三張牌串起來說一個故事。",
+"這是一條清晰的因果鏈，讓我為你解讀。"
+]);
+const chain="事情從「"+c0.c+"」（"+cm(c0)+"）開始，這股起始的能量催生了中間的變化——「"+c1.c+"」帶來了「"+cm(c1)+"」的轉折。而這一切最終匯聚成「"+c2.c+"」的結果："+cm(c2)+"。"+
+(ups>=2?"整體來看，正位牌佔多數，代表"+sx.sub+"的根源有正面的基礎，問題出在執行面而非方向上。"
+:"逆位能量較強，暗示根源處就存在一些需要面對的課題——但正因為看見了，你才有機會從源頭改變。");
+const advice=pick([
+"建議你回到「起因」的位置，重新審視"+sx.sub+"最初的狀態。從根源調整，比在末端補救有效得多。",
+""+tx.phrase+"，把注意力放在「"+c1.c+"」代表的發展階段——那是整個因果鏈中最容易介入改變的環節。"
+]);
+const fable=genFable(cards,cx,sx,tx);
+return '<div class="ss">'+sum+'</div><div class="ss">'+chain+'</div><div class="ss sa"><span class="slab">✦ 建議：</span>'+advice+'</div>'+fable;
+}
+
+// 2. Future
+function genFuture(cards,cx,sx,tx){
+const[c0,c1,c2]=cards;
+const ups=cards.filter(c=>!c.isReversed).length;
+const sum=pick([
+"三面鏡子為你照出了"+sx.sub+"在"+tx.short+"的發展軌跡。",
+"讓我把近、中、遠期的畫面連起來看。",
+""+tx.phrase+"，"+sx.topic+"的走向已經有了清晰的輪廓。"
+]);
+const flow="近期你會先感受到「"+c0.c+"」的能量——"+cm(c0)+"。這股力量會逐漸演變，進入中期後轉為「"+c1.c+"」："+cm(c1)+"。"+
+"而在"+tx.short+"的尾聲，「"+c2.c+"」將成為主導的力量："+cm(c2)+"。";
+const trend=ups>=2?
+"整體趨勢是樂觀的。三張牌中正位居多，順著這個節奏走，"+tx.short+"會有不錯的收穫。"
+:"需要留意一些挑戰。逆位牌較多，代表過程中會遇到一些阻力——但這不代表結果是壞的，它代表你需要更有意識地去應對。";
+const fable=genFable(cards,cx,sx,tx);
+return '<div class="ss">'+sum+'</div><div class="ss">'+flow+'</div><div class="ss sa"><span class="slab">✦ 整體趨勢：</span>'+trend+'</div>'+fable;
+}
+
+// 3. Core
+function genCore(cards,cx,sx,tx){
+const[c0,c1,c2]=cards;
+const age=getAge(c1);
+const ageText=age===0?"潛意識成形之前":age<=6?"大約 "+age+" 歲":age<=12?"大約 "+age+" 歲（童年）":age<=18?"大約 "+age+" 歲（青少年時期）":"大約 "+age+" 歲";
+const sum="核心牌陣揭露了一段深藏在時間裡的印記——"+sx.sub+"的根源比你想像的更久遠。";
+const narrative="一切始於「"+c0.c+"」的能量："+cm(c0)+"。這股力量在你<strong>"+ageText+"</strong>的時候，透過「"+c1.c+"」的形式烙印在你的生命中（"+cm(c1)+"）。"+
+"那段經歷的影響一直延續到今天，以「"+c2.c+"」的方式運作著："+cm(c2)+"。"+
+pick(["你可能沒有意識到，但這個模式一直在影響你對"+sx.topic+"的反應方式。",
+"每當類似的情境出現，那段記憶就會被喚醒，驅動你做出同樣的選擇。",
+"這解釋了為什麼在"+sx.topic+"上，某些模式總是反覆出現。"]);
+const advice=pick([
+"覺察就是療癒的起點。現在你已經看見了這條連結——從「"+c0.c+"」到「"+ageText+"」再到「"+c2.c+"」——下一步是允許自己用新的方式回應舊的模式。",
+"試著回想"+ageText+"前後發生過什麼。不需要完美的記憶，只需要一個感覺。當你承認那段經歷的影響，它對你的控制力就會開始減弱。"
+]);
+const fable=genFable(cards,cx,sx,tx);
+return '<div class="ss">'+sum+'</div><div class="ss">'+narrative+'</div><div class="ss sa"><span class="slab">✦ 深層連結：</span>'+advice+'</div>'+fable;
+}
+
+// 4. Situation
+function genSituation(cards,cx,sx,tx){
+const[c0,c1,c2,c3]=cards;
+const sum=pick([
+"四張牌完整呈現了"+sx.sub+"從過去到未來的全貌。讓我幫你串起來看。",
+"情境牌陣像一部四幕劇，而"+sx.sub+"的劇本已經攤開在你面前。",
+""+tx.phrase+"，"+sx.topic+"的動態全貌如下——"
+]);
+const narrative="過去，「"+c0.c+"」的能量（"+cm(c0)+"）塑造了現在的基礎。你此刻正處於「"+c1.c+"」的狀態——"+cm(c1)+"。"+
+"然而，「"+c2.c+"」以"+ori(c2)+"的姿態出現在挑戰的位置："+cm(c2)+"。這是"+tx.short+"內你最需要面對的變數。"+
+"好消息是，未來牌「"+c3.c+"」指向了："+cm(c3)+"。"+
+(c3.isReversed?"雖然是逆位，但這更像是一個提醒——結果不是註定的，你的選擇會影響最終走向。"
+:"這是一張正位牌，代表如果你能處理好挑戰，未來是值得期待的。");
+const key="關鍵在「"+c2.c+"」——"+pick([
+"它是整個牌陣的轉折點。化解了它，從「"+c1.c+"」到「"+c3.c+"」的路就通了。",
+"挑戰牌不是來阻擋你的，它是來告訴你：這裡有一個你還沒看見的盲點。看見它，你就自由了。",
+"把它想成一道關卡。"+tx.phrase+"，集中精力突破這一關，其他的自然會跟著好轉。"
+]);
+const fable=genFable(cards,cx,sx,tx);
+return '<div class="ss">'+sum+'</div><div class="ss">'+narrative+'</div><div class="ss sa"><span class="slab">✦ 建議：</span>'+key+'</div>'+fable;
+}
+
+// 5. Compare
+function genCompare(cards,cx,sx,tx){
+const la=document.getElementById("cmp-a").value||curSub.cmpA||"選項 A";
+const lb=document.getElementById("cmp-b").value||curSub.cmpB||"選項 B";
+const a=cards.slice(0,3),b=cards.slice(3,6);
+const aUp=a.filter(c=>!c.isReversed).length;
+const bUp=b.filter(c=>!c.isReversed).length;
+const sum=pick([
+"兩條路，兩組牌。讓我為你拆解「"+la+"」和「"+lb+"」各自的能量。",
+"比較牌陣最誠實——它不會告訴你該選哪個，但它會讓你看清每條路上有什麼。",
+""+tx.phrase+"，這兩個選擇在"+cx.area+"中呈現出截然不同的面貌。"
+]);
+const sideA="「"+la+"」這邊："+a.map(c=>c.c+"（"+ori(c)+"："+cm(c)+"）").join("；")+"。"+
+(aUp>=2?"正位牌佔多數，這條路整體能量較為順暢，阻力較小。"
+:"逆位能量較強，走這條路需要面對更多的調整和挑戰。");
+const sideB="「"+lb+"」這邊："+b.map(c=>c.c+"（"+ori(c)+"："+cm(c)+"）").join("；")+"。"+
+(bUp>=2?"正位能量佔優，這條路有比較明確的正向發展基礎。"
+:"逆位較多，意味著這個方向目前的條件還不夠成熟。");
+let verdict;
+if(aUp>bUp)verdict="從"+tx.short+"的能量來看，「"+la+"」的條件更成熟一些。但牌只是呈現能量的傾向——如果你的心強烈地被「"+lb+"」吸引，那也是一個不該忽視的訊號。";
+else if(bUp>aUp)verdict="「"+lb+"」在"+tx.short+"展現了更順暢的能量。不過，最好的選擇永遠不只是看哪條路比較輕鬆，而是看哪條路的結果是你真正想要的。";
+else verdict="兩條路的能量旗鼓相當——沒有一條是明顯更好的。這種時候，牌在告訴你：答案不在外面，在你心裡。你更願意承擔哪條路的代價？那就是你的答案。";
+const fable=genFable(cards,cx,sx,tx);
+return '<div class="ss">'+sum+'</div><div class="ss"><span class="slab">【'+la+'】</span>'+sideA+'</div><div class="ss"><span class="slab">【'+lb+'】</span>'+sideB+'</div><div class="ss sa"><span class="slab">✦ 綜合比較：</span>'+verdict+'</div>'+fable;
+}
+
+// 6. Majors
+function genMajors(cards,cx,sx,tx){
+const mjIdx=cards.findIndex(c=>c.s==="major");
+if(mjIdx<0)return'<div class="ss">未能找到核心主牌。</div>';
+const major=cards[mjIdx];
+const supports=cards.slice(mjIdx+1,mjIdx+3);
+const explores=cards.slice(0,mjIdx);
+let h="";
+if(explores.length>0){
+h+='<div class="ss">在找到主牌之前，你經過了 '+explores.length+' 張探索牌（'+explores.map(c=>c.c).join("、")+'）。'+
+pick(["這些牌像是抵達答案前必經的走廊——它們不是核心，但它們告訴你：問題的外層長什麼樣子。",
+"每一張探索牌都是命運在說：「還不是，再往深處走。」直到你觸及了真正的核心。",
+"這些前奏暗示了問題的表面結構。但真正的答案，在下一張牌裡。"])+'</div>';
+}
+const majorDesc=pick([
+"大阿爾克納「"+major.c+"」以"+ori(major)+"的姿態作為核心指引現身："+cm(major)+"。這不是一個小事件——這是你的靈魂此刻最需要面對的課題。",
+"「"+major.c+"」——"+cm(major)+"。在邏輯塔羅的體系中，大阿爾克納代表的是靈魂演化的關鍵節點。它的出現意味著："+sx.sub+"觸及了你生命中一個重大的轉折。",
+"命運揭示了「"+major.c+"」（"+ori(major)+"）："+cm(major)+"。這張牌是整個占卜的核心——你問的所有問題，最終都指向它。"
+]);
+h+='<div class="ss"><span class="slab">【核心主牌】'+major.fb+' '+major.c+'</span><br>'+majorDesc+'</div>';
+if(supports[0]){
+h+='<div class="ss"><span class="slab">【輔佐牌一】'+supports[0].c+'（'+ori(supports[0])+'）</span><br>'+
+"第一張輔佐牌為主牌提供了具體的行動方向："+cm(supports[0])+"。"+
+pick(["如果說主牌是「你該面對什麼」，那這張牌就是「你該怎麼做」。","這是落實主牌指引的第一步——從這裡切入，"+sx.topic+"會開始轉變。","它把主牌的抽象課題具體化了。"])+'</div>';
+}
+if(supports[1]){
+h+='<div class="ss"><span class="slab">【輔佐牌二】'+supports[1].c+'（'+ori(supports[1])+'）</span><br>'+
+"第二張輔佐牌補充了另一個面向："+cm(supports[1])+"。"+
+pick(["結合兩張輔佐牌，你的行動方案就完整了。","這股能量會在你執行的過程中伴隨著你。","三張牌的智慧交織在一起，構成了一幅完整的指引圖。"])+'</div>';
+}
+const advice="核心主牌「"+major.c+"」揭示的課題，透過「"+(supports.map(s=>s.c).join("」和「"))+"」的輔助，"+
+pick(["為你在"+sx.topic+"上指出了一條清晰的路。","在"+tx.short+"，帶著這份覺知前行，你會感受到真實的轉化。","把這三張牌的智慧融入日常的決定中，改變會比你想像的更快到來。"]);
+h+='<div class="ss sa"><span class="slab">✦ 行動指引：</span>'+advice+'</div>';
+h+=genFable(cards,cx,sx,tx);
+return h;
+}
+
+// ============================================================
+// FABLE SELECTOR - 90 stories matching engine
+// ============================================================
+
+function genFable(cards,cx,sx,tx){
+// 1. Determine energy
+const ups=cards.filter(c=>!c.isReversed).length;
+const total=cards.length;
+const ratio=ups/total;
+let energy;
+if(ratio>=0.66)energy="positive";
+else if(ratio<=0.34)energy="shadow";
+else energy="balanced";
+
+// 2. Filter stories by theme + energy
+const themeMatched=STORIES.filter(s=>s.themes.includes(cat)&&s.energy===energy);
+let pool=themeMatched.length>0?themeMatched:STORIES.filter(s=>s.energy===energy);
+if(pool.length===0)pool=STORIES;
+
+// 3. Random select from pool
+const selected=pick(pool);
+
+// 4. Find matching action by subtopic key
+const subKey=curSub?curSub.key:"overall";
+let actionTpl=selected.actions[subKey]||selected.actions.default||"信任這個過程。{time}，答案會自己出現。";
+
+// 5. Substitute {time} and {cards}
+const timePhrase=tx.phrase;
+const keyCard=cards[cards.length-1]; // 最關鍵的那張（通常是最後一張：未來/結果/主牌）
+const keyCardName=keyCard.c;
+actionTpl=actionTpl.replace(/\{time\}/g,timePhrase).replace(/\{cards\}/g,"「"+keyCardName+"」");
+
+// 6. ★ NEW: 自動生成「故事↔牌面」橋接句
+const bridge=buildBridge(cards,keyCard,energy);
+
+return '<div class="fable">'+selected.story+'<div class="fable-bridge">'+bridge+'</div><span class="fable-action">'+actionTpl+'</span></div>';
+}
+
+// ===== Bridge sentence builder =====
+function buildBridge(cards,keyCard,energy){
+// 把所有抽到的牌名整理出來
+const names=cards.map(c=>c.c);
+const upNames=cards.filter(c=>!c.isReversed).map(c=>c.c);
+const rvNames=cards.filter(c=>c.isReversed).map(c=>c.c);
+
+// 找出大阿爾克納（如果有）
+const majors=cards.filter(c=>c.s==="major");
+const hasMajor=majors.length>0;
+const keyOri=keyCard.isReversed?"逆位":"正位";
+const keyMeaning=keyCard.isReversed?keyCard.rv:keyCard.up;
+
+// 根據能量挑選不同的橋接模板
+const positiveBridges=[
+"你抽到的這組牌——尤其是「"+keyCard.c+"」（"+keyOri+"："+keyMeaning+"）——正呼應了這個故事的核心：你已經在路上了。",
+"看看你的牌：「"+names.join("、")+"」。它們和這個故事說的是同一件事——能量在你這邊，行動的時候到了。",
+"這個故事不是隨機的。「"+keyCard.c+"」"+keyOri+"出現在最重要的位置，告訴你"+keyMeaning+"——就像故事裡那個成功的時刻。",
+"「"+keyCard.c+"」（"+keyOri+"）正是故事想對你說的話。",
+hasMajor?"特別是大阿爾克納「"+majors[0].c+"」的出現，加重了這個故事的份量——這不是小事，是靈魂層級的指引。":"當你看著這些牌，再回頭看這個故事，你會發現它們指向同一個方向。"
+];
+
+const balancedBridges=[
+"你抽到的牌正逆參半——「"+upNames.join("、")+"」是正位，「"+rvNames.join("、")+"」是逆位。這個故事說的就是這種「中間狀態」：既不是全面順遂，也不是全面卡關。",
+"看看「"+keyCard.c+"」（"+keyOri+"："+keyMeaning+"），它正好呼應了故事的核心訊息——這是一個需要平衡的時刻。",
+"這個故事為什麼適合你？因為你的牌組裡有正有逆——正像故事裡那個矛盾的處境。「"+keyCard.c+"」是其中最重要的線索。",
+"「"+keyCard.c+"」"+keyOri+"出現，意思是"+keyMeaning+"。配上其他牌的訊息，這個故事正好說中你的狀態。",
+hasMajor?"大阿爾克納「"+majors[0].c+"」的出現提醒你：這不是普通的選擇，是人生階段的轉折。":"故事裡的兩個方向，就像你的牌組裡的正逆——兩個都是真的。"
+];
+
+const shadowBridges=[
+"你抽到的牌以逆位為主——「"+rvNames.join("、")+"」。這個故事不是來嚇你的，是來告訴你：這個階段的功課，就是面對。",
+"「"+keyCard.c+"」（逆位："+keyMeaning+"）出現在最關鍵的位置，正是故事想揭示的真相。",
+"逆位多不代表壞事，它代表「需要重新看待」。看看「"+keyCard.c+"」——它和這個故事說的是同一件事。",
+"你的牌組告訴我，現在是一個需要誠實面對的時期。「"+keyCard.c+"」"+keyOri+"——意味著"+keyMeaning+"。故事裡的領悟，正是給你的。",
+hasMajor?"特別是大阿爾克納「"+majors[0].c+"」的出現——這是靈魂在說：是時候面對這個了。":"故事裡的轉折，呼應了你的牌組中那些逆位的訊息。"
+];
+
+let pool;
+if(energy==="positive")pool=positiveBridges;
+else if(energy==="shadow")pool=shadowBridges;
+else pool=balancedBridges;
+
+return pick(pool);
+}
+
+</script>
+</body>
+</html>
